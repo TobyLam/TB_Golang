@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+  "fmt"
+  //为了使用utils.go文件的变量或者函数，我们需要先引进该model包
+  "go_code/chapter03/demo04/model"
+)
 
 // 变量使用的注意事项
 func main() {
@@ -15,5 +19,8 @@ func main() {
 	//变量在同一个作用域(在一个函数或者在代码块)内不能重名
 	//var i int = 99 //报错，重复定义
 	//i := 99
+
+	//我们使用utils.go 的 heroName 包名.标识符
+	fmt.Println(model.HeroName)
 
 }
