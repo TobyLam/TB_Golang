@@ -6,17 +6,38 @@ import(
 )
 
 //冒泡排序
-func bubbleSort(arr *[10]int){
- 
+func bubbleSort(arr *[10]int){ 
     for i := 0;i < len(*arr)-1;i++{
     	for j:= 0;j < len(*arr)-i-1;j++{
 
 	    if(*arr)[j] < (*arr)[j+1] {
                (*arr)[j],(*arr)[j+1] = (*arr)[j+1],(*arr)[j]	        
             }
-
 	}
     }
+}
+//二分查找
+func binaryFind(arr *[10]int,leftIndex int,rightIndex int,findVal int){
+
+   if leftIndex > rightIndex {
+     fmt.Printf("%v没找到\n",findVal)
+     return
+   }
+   //计算中间的下标
+   middle := (leftIndex + rightIndex)/2
+   
+   if (*arr)[middle] > findVal {
+      //中间值大于查找值,则查找值可能在上半区间 leftIndex --> middle-1
+      binaryFind(arr,leftIndex,middle-1,findVal)
+   }else if (*arr)[middle] < findVal {
+      //中间值小于查找值，则查找值可能在下半区间 middle+1 --> rightIndex
+      binaryFind(arr,middle+1,rightIndex,findVal)
+   }else{
+      //找到了
+      fmt.Printf("%v找到了,下标为%v\n",findVal,middle)
+      return
+   }
+   
 }
 
 func main(){
@@ -38,26 +59,20 @@ func main(){
     bubbleSort(&arr)
     //倒序打印 	
     fmt.Println(arr)
-    //求平均值、最大值、最大值的下标，是否有55
+    //求平均值、最大值、最大值的下标
     sum := 0
     max := 0
     maxIndex := 0
-    existFF := 0
     for i,v := range arr2 {
        sum += v
        if v >= max {
            max = v
            maxIndex = i
        }
-       if v == 55 {
-           existFF = 1
-       }    
     }
     fmt.Printf("平均值%v 最大值%v 最大值的下标%v\n",sum/len(arr2), max, maxIndex)
-    if existFF == 1 {
-       fmt.Println("有55")
-    }else{
-       fmt.Println("没有55")
-    }
+    //是否有55
+    binaryFind(&arr2,0,len(arr2)-1,55)
+    
     fmt.Println(arr2)
 }
