@@ -34,6 +34,15 @@ func main(){
   for i := 0; i < len(arr);i++{
       arr[i] = math.Floor(rand.Float64()*(max-min)*math.Pow10(precision)+min*math.Pow10(precision)) / math.Pow10(precision)
   }
+  
+  //冒泡排序
+  for i := 0; i < len(arr); i++ {
+      for j:= 0; j < len(arr)-1-i;j++{
+          if arr[j] > arr[j+1] {
+	      arr[j],arr[j+1] = arr[j+1],arr[j]
+          }	
+      }
+  }
 
   fmt.Printf("原数组=%v\n",arr)
 
