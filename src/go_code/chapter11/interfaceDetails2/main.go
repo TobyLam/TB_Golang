@@ -41,7 +41,10 @@ type Usb interface {
 type Stt struct {
 }
 
-func (this *Stt) Say() {
+// func (this *Stt) Say() {
+// 	fmt.Println("Say()~")
+// }
+func (stt *Stt) Say() {
 	fmt.Println("Say()~")
 }
 
