@@ -9,6 +9,14 @@ type Usb interface {
 	Stop()
 }
 
+//声明/定义一个接口
+type Usb2 interface {
+	//声明了两个没有实现的方法
+	Start()
+	Stop()
+	Test()
+}
+
 type Phone struct {
 }
 
@@ -25,7 +33,7 @@ type Camera struct {
 }
 
 func (c Camera) Start() {
-	fmt.Println("相机开始工作。。。")
+	fmt.Println("相机开始工作~~~。。。")
 }
 func (c Camera) Stop() {
 	fmt.Println("相机停止工作。。。")
