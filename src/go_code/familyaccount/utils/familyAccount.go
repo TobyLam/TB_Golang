@@ -92,9 +92,29 @@ func (this *familyAccount) exit() {
 	}
 }
 
+//登录
+func (this *familyAccount) login() {
+	for {
+		fmt.Println("请输入账号:")
+		fmt.Scanln(&this.key)
+		fmt.Println("请输入密码:")
+		fmt.Scanln(&this.key)
+		if this.key == "123" {
+			fmt.Println("登录成功")
+			break
+		} else {
+			fmt.Println("账号或密码错误，请重新输入..")
+		}
+	}
+}
+
 // 给该结构体绑定相应的方法
 // 显示主菜单
 func (this *familyAccount) MainMenu() {
+
+	//登录
+	this.login()
+
 	for {
 		fmt.Println("\n-----------------家庭收支记账软件-----------------")
 		fmt.Println("                 1 收支明细")
@@ -117,5 +137,11 @@ func (this *familyAccount) MainMenu() {
 		default:
 			fmt.Println("请输入正确的选项..")
 		}
+
+		if !this.loop {
+			break
+		}
 	}
+
+	fmt.Println("感谢使用家庭记账软件，再见！")
 }
