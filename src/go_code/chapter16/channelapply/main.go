@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 	_ "time"
 )
 
@@ -24,7 +25,7 @@ func readData(intChan chan int, exitChan chan bool) {
 		if !ok {
 			break
 		}
-		//time.Sleep(time.Second)
+		time.Sleep(time.Second)
 		fmt.Printf("readData 读到数据=%v\n", v)
 	}
 	//readData 读取完数据后，即任务完成
@@ -35,7 +36,7 @@ func readData(intChan chan int, exitChan chan bool) {
 func main() {
 
 	//创建两个管道
-	intChan := make(chan int, 50)
+	intChan := make(chan int, 10)
 	exitChan := make(chan bool, 1)
 
 	go writeData(intChan)
