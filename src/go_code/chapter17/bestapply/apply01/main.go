@@ -43,7 +43,7 @@ func TestStruct(a interface{}) {
 	kd := val.Kind()
 	//如果传入的不是struct,就退出
 	if kd != reflect.Struct {
-		fmt.Println("expect struce")
+		fmt.Println("expect struct")
 		return
 	}
 
