@@ -3,6 +3,9 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/redigo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/cespare/xxhash" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/dgryski/go-rendezvous" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/github.com/garyburd/redigo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/redis/go-redis" vcs="Git" />
   </component>
 </project>
