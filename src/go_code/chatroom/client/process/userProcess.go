@@ -1,16 +1,22 @@
-package main
+package process
 
 import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"go_code/chatroom/client/utils"
 	"go_code/chatroom/common/message"
 	"net"
-	_ "time"
 )
 
+// 给关联一个用户登录的方法
+type UserProcess struct {
+	//字段..
+
+}
+
 // 写一个函数，完成登录
-func login(userId int, userPwd string) (err error) {
+func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 
 	////下一步就要开始定协议...
 	//fmt.Printf(" userId = %d userPwd = %s", userId, userPwd)
@@ -77,7 +83,11 @@ func login(userId int, userPwd string) (err error) {
 	//time.Sleep(20 * time.Second)
 	//fmt.Println("休眠了20..")
 	//还需要处理服务器端返回的消息
-	mes, err = readPkg(conn) //mes 就是
+	//创建一个Transfer 实例
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+	mes, err = tf.ReadPkg() //mes 就是
 	if err != nil {
 		fmt.Println("readPkg(conn) err=", err)
 		return
@@ -86,7 +96,18 @@ func login(userId int, userPwd string) (err error) {
 	var loginResMes message.LoginResMes
 	err = json.Unmarshal([]byte(mes.Data), &loginResMes)
 	if loginResMes.Code == 200 {
-		fmt.Println("登录成功")
+		//fmt.Println("登录成功")
+
+		//这里还需要在服务器启动一个协程
+		//该协程保持和服务器端的通讯，如果服务器有数据推送给客户端
+		//则接收并显示在客户端的终端
+		go serverProcessMes(conn)
+
+		//1.显示登录成功的菜单..
+		for {
+			showMenu()
+		}
+
 	} else if loginResMes.Code == 500 {
 		fmt.Println(loginResMes.Error)
 	}
