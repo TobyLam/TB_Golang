@@ -3,7 +3,9 @@ package main
 import (
 	_ "errors"
 	"fmt"
+	"go_code/chatroom/server/model"
 	"net"
+	"time"
 )
 
 //func readPkg(conn net.Conn) (mes message.Message, err error) {
@@ -149,7 +151,22 @@ func process(conn net.Conn) {
 
 }
 
+func init() {
+	//当服务器启动时，就初始化redis连接池
+	initPool("192.168.1.18:6379", 16, 0, 300*time.Second)
+	initUserDao()
+}
+
+// 完成UserDao初始化
+func initUserDao() {
+	//pool是全局变量
+	//注意初始化顺序问题
+	//initPool -> initUserDao
+	model.MyUserDao = model.NewUserDao(pool)
+}
+
 func main() {
+
 	//提示信息
 	fmt.Println("服务器[新的结构]在8889端口监听....")
 	listen, err := net.Listen("tcp", "0.0.0.0:8889")
