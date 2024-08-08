@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
+	"go_code/chatroom/common/message"
 )
 
 // 在启动服务器启动后，就初始化一个userDao实例
@@ -71,6 +72,31 @@ func (this *UserDao) Login(userId int, userPwd string) (user *User, err error) {
 		err = ERROR_USER_PWD
 		return
 	}
+	return
+}
 
+func (this *UserDao) Register(user *message.User) (err error) {
+
+	//先从UserDao 的连接池中取一个连接
+	conn := this.pool.Get()
+	defer conn.Close()
+	_, err = this.getUserById(conn, user.UserId)
+	if err == nil {
+		err = ERROR_USER_EXISTS
+		return
+	}
+
+	//用户id不存在
+	data, err := json.Marshal(user) //序列化
+	if err != nil {
+		return
+	}
+
+	//入库
+	_, err = conn.Do("HSet", "users", user.UserId, string(data))
+	if err != nil {
+		fmt.Println("保存注册用户错误 err=", err)
+		return
+	}
 	return
 }
