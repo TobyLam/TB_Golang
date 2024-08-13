@@ -1,8 +1,10 @@
 package process
 
 import (
+	"encoding/json"
 	"fmt"
 	"go_code/chatroom/client/utils"
+	"go_code/chatroom/common/message"
 	"net"
 	"os"
 )
@@ -20,7 +22,8 @@ func showMenu() {
 
 	switch key {
 	case 1:
-		fmt.Println("显示在线用户列表-")
+		//fmt.Println("显示在线用户列表-")
+		outputOnlineUser()
 	case 2:
 		fmt.Println("发送消息")
 	case 3:
@@ -49,7 +52,20 @@ func serverProcessMes(conn net.Conn) {
 			return
 		}
 		//如果读取到消息，下一步处理逻辑
-		fmt.Printf("mes=%v\n", mes)
+		switch mes.Type {
+		case message.NotifyUserStatusMesType: //有人上线了
+			//1、取出NotifyUserStatusMes
+			var notifyUserStatusMes message.NotifyUserStatusMes
+			json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
+			//2. 把这个用户的信息，保存到客户端的map[int]User中
+			updateUserStatus(&notifyUserStatusMes)
+		//处理
+
+		default:
+			fmt.Println("服务器端返回了未知消息类型")
+
+		}
+		//fmt.Printf("mes=%v\n", mes)
 
 	}
 }
