@@ -10,13 +10,13 @@ import (
 	"os"
 )
 
-// 给关联一个用户登录的方法
+// 声明一个结构体，绑定处理用户相关的方法
 type UserProcess struct {
-	//字段..
-
 }
 
+// 用户注册
 func (this *UserProcess) Register(userId int, userPwd string, userName string) (err error) {
+
 	//1.连接到服务器
 	conn, err := net.Dial("tcp", "localhost:8889")
 	if err != nil {
@@ -26,9 +26,11 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 	//延时关闭
 	defer conn.Close()
 
-	//2.准备通过conn发送消息给服务
+	//2.准备通过conn发送消息给服务器
+
 	var mes message.Message
 	mes.Type = message.RegisterMesType
+
 	//3.创建一个RegisterMes 结构体
 	var registerMes message.RegisterMes
 	registerMes.User.UserId = userId
@@ -41,6 +43,7 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 		fmt.Println("json.Marshal err=", err)
 		return
 	}
+
 	//5.把data赋给mes.Data字段
 	mes.Data = string(data)
 
@@ -56,12 +59,13 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 		Conn: conn,
 	}
 
-	//发送data给服务器端
+	//7.发送data给服务器端
 	err = tf.WritePkg(data)
 	if err != nil {
 		fmt.Println("注册发送信息错误 err=", err)
 	}
 
+	//8.接收服务器返回的响应消息
 	mes, err = tf.ReadPkg() //mes 就是RegisterResMes
 	if err != nil {
 		fmt.Println("readPkg(conn) err=", err)
@@ -72,7 +76,7 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 	var registerResMes message.RegisterResMes
 	err = json.Unmarshal([]byte(mes.Data), &registerResMes)
 	if registerResMes.Code == 200 {
-		fmt.Println("注册成功，你重新登录")
+		fmt.Println("注册成功，请重新登录")
 		os.Exit(0)
 	} else {
 		fmt.Println(registerResMes.Error)
@@ -82,13 +86,8 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 	return
 }
 
-// 写一个函数，完成登录
+// 用户登录
 func (this *UserProcess) Login(userId int, userPwd string) (err error) {
-
-	////下一步就要开始定协议...
-	//fmt.Printf(" userId = %d userPwd = %s", userId, userPwd)
-	//
-	//return nil
 
 	//1.连接到服务器
 	conn, err := net.Dial("tcp", "localhost:8889")
@@ -102,6 +101,7 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 	//2.准备通过conn发送消息给服务
 	var mes message.Message
 	mes.Type = message.LoginMesType
+
 	//3.创建一个LoginMes 结构体
 	var loginMes message.LoginMes
 	loginMes.UserId = userId
@@ -132,12 +132,13 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 	binary.BigEndian.PutUint32(buf[0:4], pkgLen)
 	//发送长度
 	n, err := conn.Write(buf[:4])
+	//校验发送数据的长度
 	if n != 4 || err != nil {
 		fmt.Println("conn.Write(bytes) fail", err)
 		return
 	}
 
-	fmt.Printf("客户端，发送消息的长度=%d 内容=%s", len(data), string(data))
+	//fmt.Printf("客户端，发送消息的长度=%d 内容=%s", len(data), string(data))
 
 	//发送消息本身
 	_, err = conn.Write(data)
@@ -168,7 +169,6 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 		CurUser.UserId = userId
 		CurUser.UserStatus = message.UserOnline
 
-		//fmt.Println("登录成功")
 		//可以显示当前在线用户列表，遍历 loginResMes.UsersId
 		fmt.Println("当前在线用户列表如下：")
 		for _, v := range loginResMes.UsersId {

@@ -66,14 +66,10 @@ func serverProcessMes(conn net.Conn) {
 			json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
 			//2. 把这个用户的信息，保存到客户端的map[int]User中
 			updateUserStatus(&notifyUserStatusMes)
-		//处理
 		case message.SmsMesType: //有人群发消息
 			outputGroupMes(&mes)
 		default:
 			fmt.Println("服务器端返回了未知消息类型")
-
 		}
-		//fmt.Printf("mes=%v\n", mes)
-
 	}
 }

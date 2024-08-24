@@ -176,16 +176,6 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		fmt.Println(user, "登录成功")
 	}
 
-	////如果用户id=100，密码等于123456，认为合法，否则不合法
-	//if loginMes.UserId == 100 && loginMes.UserPwd == "123456" {
-	//	//合法
-	//	loginResMes.Code = 200
-	//} else {
-	//	//不合法
-	//	loginResMes.Code = 500 //500状态码，表示该用户不存在
-	//	loginResMes.Error = "该用户不存在，请注册再使用..."
-	//}
-
 	//3将 loginResMes 序列化
 	data, err := json.Marshal(loginResMes)
 	if err != nil {
