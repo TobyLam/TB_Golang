@@ -1,7 +1,6 @@
 package process
 
 import (
-	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"go_code/chatroom/client/utils"
@@ -31,7 +30,7 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 	var mes message.Message
 	mes.Type = message.RegisterMesType
 
-	//3.创建一个RegisterMes 结构体
+	//3.创建一个RegisterMes 结构体实例，并赋值
 	var registerMes message.RegisterMes
 	registerMes.User.UserId = userId
 	registerMes.User.UserPwd = userPwd
@@ -102,7 +101,7 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 	var mes message.Message
 	mes.Type = message.LoginMesType
 
-	//3.创建一个LoginMes 结构体
+	//3.创建一个LoginMes 结构体实例，并赋值
 	var loginMes message.LoginMes
 	loginMes.UserId = userId
 	loginMes.UserPwd = userPwd
@@ -123,38 +122,18 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 		return
 	}
 
-	//7.data就是要发送的消息
-	//7.1 把data的长度发送给服务器
-	//先获取到data的长度->转成一个表示长度的byte切片
-	var pkgLen uint32
-	pkgLen = uint32(len(data))
-	var buf [4]byte
-	binary.BigEndian.PutUint32(buf[0:4], pkgLen)
-	//发送长度
-	n, err := conn.Write(buf[:4])
-	//校验发送数据的长度
-	if n != 4 || err != nil {
-		fmt.Println("conn.Write(bytes) fail", err)
-		return
-	}
-
-	//fmt.Printf("客户端，发送消息的长度=%d 内容=%s", len(data), string(data))
-
-	//发送消息本身
-	_, err = conn.Write(data)
-	if err != nil {
-		fmt.Println("conn.Write(data) fail", err)
-		return
-	}
-
-	//休眠20
-	//time.Sleep(20 * time.Second)
-	//fmt.Println("休眠了20..")
-	//还需要处理服务器端返回的消息
 	//创建一个Transfer 实例
 	tf := &utils.Transfer{
 		Conn: conn,
 	}
+	//7.发送数据
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("发送登录消息错误，err=", err)
+		return
+	}
+
+	//8.接收服务器返回的响应消息
 	mes, err = tf.ReadPkg() //mes 就是
 	if err != nil {
 		fmt.Println("readPkg(conn) err=", err)
@@ -167,6 +146,7 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 		//初始化CurUser
 		CurUser.Conn = conn
 		CurUser.UserId = userId
+		CurUser.UserName = loginResMes.UserName
 		CurUser.UserStatus = message.UserOnline
 
 		//可以显示当前在线用户列表，遍历 loginResMes.UsersId

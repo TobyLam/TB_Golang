@@ -26,7 +26,7 @@ type Transfer struct {
 
 func (this *Transfer) ReadPkg() (mes message.Message, err error) {
 
-	fmt.Println("正在读取服务器返回的数据...")
+	//fmt.Println("正在读取服务器返回的数据...")
 
 	//Conn.Read(this.Buf[:n]) 解析：从Conn这个连接里面读取n个字节，赋值给this.Buf;并非从this.Buf里读取数据。
 

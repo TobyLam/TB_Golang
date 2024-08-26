@@ -13,9 +13,8 @@ var (
 	MyUserDao *UserDao
 )
 
-//定义一个UserDao结构体
-//完成对User结构体的各种操作
-
+// 定义一个UserDao结构体
+// 完成对User结构体的各种操作
 type UserDao struct {
 	pool *redis.Pool
 }
@@ -61,7 +60,10 @@ func (this *UserDao) Login(userId int, userPwd string) (user *User, err error) {
 
 	//先从UserDao 的连接池中取一个连接
 	conn := this.pool.Get()
+	//延时关闭
 	defer conn.Close()
+
+	//根据userId查询用户信息
 	user, err = this.getUserById(conn, userId)
 	if err != nil {
 		return
@@ -75,12 +77,17 @@ func (this *UserDao) Login(userId int, userPwd string) (user *User, err error) {
 	return
 }
 
+// 完成用户注册
 func (this *UserDao) Register(user *message.User) (err error) {
 
 	//先从UserDao 的连接池中取一个连接
 	conn := this.pool.Get()
+	//延时关闭
 	defer conn.Close()
+
+	//根据userId查询用户信息
 	_, err = this.getUserById(conn, user.UserId)
+	//用户id已存在，返回
 	if err == nil {
 		err = ERROR_USER_EXISTS
 		return

@@ -20,8 +20,9 @@ func (this *SmsProcess) SendGroupMes(content string) (err error) {
 	// 2.创建一个SmsMes 实例
 	var smsMes message.SmsMes
 	smsMes.Content = content               //内容.
-	smsMes.UserId = CurUser.UserId         //
-	smsMes.UserStatus = CurUser.UserStatus //
+	smsMes.UserId = CurUser.UserId         //发送者id
+	smsMes.UserStatus = CurUser.UserStatus //发送者状态
+	smsMes.UserName = CurUser.UserName     //发送者昵称
 
 	// 3.序列化smsMes
 	data, err := json.Marshal(smsMes)

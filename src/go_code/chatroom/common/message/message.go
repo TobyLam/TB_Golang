@@ -35,9 +35,10 @@ type LoginMes struct {
 
 // 登录响应消息
 type LoginResMes struct {
-	Code    int    `json:"code"` //返回状态码 500 表示该用户未注册 200表示登录成功
-	UsersId []int  //增加字段，保存用户id的切片
-	Error   string `json:"error"` //返回错误信息
+	Code     int    `json:"code"` //返回状态码 500 表示该用户未注册 200表示登录成功
+	UsersId  []int  //增加字段，保存用户id的切片
+	Error    string `json:"error"`    //返回错误信息
+	UserName string `json:"userName"` //返回用户姓名
 }
 
 // 注册请求消息

@@ -4,21 +4,20 @@ import (
 	"fmt"
 )
 
-//因为UserMgr 实例在服务器有且仅有一个
-//且在多处使用，因此定义为全部变量
-
+// 因为UserMgr 实例在服务器有且仅有一个
+// 且在多处使用，因此定义为全局变量
 var (
 	userMgr *UserMgr
 )
 
 type UserMgr struct {
-	onlineUsers map[int]*UserProcess
+	onlineUsers map[int]*UserProcess //在线用户，[当前登录用户id]关联的用户处理实例（包含链接和当前用户id，方便后续操作）
 }
 
 // userMgr初始化
 func init() {
 	userMgr = &UserMgr{
-		onlineUsers: make(map[int]*UserProcess, 1024),
+		onlineUsers: make(map[int]*UserProcess, 1024), //初始化，长度1024
 	}
 }
 

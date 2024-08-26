@@ -162,6 +162,7 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 
 	} else {
 		loginResMes.Code = 200
+		loginResMes.UserName = user.UserName
 		//这里因为用户登录成功，把该登录成功的用户放入到userMgr中
 		//将登录成功的用户的userId 赋给 this
 		this.UserId = loginMes.UserId

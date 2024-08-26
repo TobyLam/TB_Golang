@@ -17,7 +17,7 @@ func outputGroupMes(mes *message.Message) { //mes 一定是smsMes类型
 	}
 
 	//显示信息
-	info := fmt.Sprintf("用户id:\t%d 对大家说:\t%s", smsMes.UserId, smsMes.Content)
+	info := fmt.Sprintf("%s:\t%s", smsMes.UserName, smsMes.Content)
 	fmt.Println(info)
 	fmt.Println()
 }

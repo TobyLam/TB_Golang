@@ -20,7 +20,7 @@ func process(conn net.Conn) {
 	}
 	err := processor.process2()
 	if err != nil {
-		fmt.Println("客户端和服务器端通讯协程错误,err=", err)
+		fmt.Println("客户端和服务器端通讯协程错误 err=", err)
 		return
 	}
 
@@ -54,7 +54,7 @@ func main() {
 
 	//一旦监听成功，就等待客户端来连接服务器
 	for {
-		fmt.Println("等待客户端来连接服务器...")
+		fmt.Println("等待客户端连接服务器...")
 		conn, err := listen.Accept()
 		if err != nil {
 			fmt.Println("listen.Accept err=", err)

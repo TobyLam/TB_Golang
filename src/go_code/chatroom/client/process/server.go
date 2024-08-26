@@ -11,7 +11,7 @@ import (
 
 // 显示登录成功后的界面..
 func showMenu() {
-	fmt.Println("--------恭喜xxx登录成功----------")
+	fmt.Printf("--------恭喜%s登录成功----------\n", CurUser.UserName)
 	fmt.Println("--------1. 显示在线用户列表----------")
 	fmt.Println("--------2. 发送消息----------")
 	fmt.Println("--------3. 信息列表----------")
@@ -30,7 +30,7 @@ func showMenu() {
 		outputOnlineUser()
 	case 2:
 		//fmt.Println("发送消息")
-		fmt.Println("你想对大家说点什么:)")
+		fmt.Println("请输入需要发送的内容:)")
 		fmt.Scanf("%s\n", &content)
 		smsProcess.SendGroupMes(content)
 	case 3:
@@ -38,6 +38,7 @@ func showMenu() {
 
 	case 4:
 		fmt.Println("你选择退出了系统...")
+
 		os.Exit(0)
 	default:
 		fmt.Println("你输入的选项不正确...")
@@ -52,7 +53,7 @@ func serverProcessMes(conn net.Conn) {
 		Conn: conn,
 	}
 	for {
-		fmt.Println("客户端正在等待读取服务器发送的消息")
+		//fmt.Println("客户端正在等待读取服务器发送的消息")
 		mes, err := tf.ReadPkg()
 		if err != nil {
 			fmt.Println("tf.ReadPkg err=", err)
