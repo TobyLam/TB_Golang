@@ -11,10 +11,10 @@ var onlineUsers map[int]*message.User = make(map[int]*message.User, 10)
 var CurUser model.CurUser //在用户登录成功后，完成对CurUser的初始化
 
 // 在客户端显示当前在线的用户
-func outputOnlineUser() {
+func outputOnlineUser() (userNum int, err error) {
 	//遍历onlineUsers
 	fmt.Println("当前在线用户列表：")
-	if len(onlineUsers) == 0 {
+	if userNum = len(onlineUsers); len(onlineUsers) == 0 {
 		fmt.Println("其他用户都下线了...")
 	} else {
 		for id, _ := range onlineUsers {
@@ -22,6 +22,7 @@ func outputOnlineUser() {
 		}
 	}
 	fmt.Println()
+	return
 }
 
 // 编写方法，处理返回的NotifyUserStatusMes

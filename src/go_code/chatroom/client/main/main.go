@@ -52,14 +52,10 @@ func main() {
 			up.Register(userId, userPwd, userName)
 
 		case 3:
-
 			fmt.Println("退出系统")
 			os.Exit(0)
-
 		default:
-
 			fmt.Println("你的输入有误，请重新输入")
-
 		}
 	}
 

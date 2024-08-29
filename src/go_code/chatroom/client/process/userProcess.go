@@ -173,6 +173,7 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 		go serverProcessMes(conn)
 
 		//1.显示登录成功的菜单..
+		fmt.Printf("--------恭喜%s登录成功----------\n", CurUser.UserName)
 		for {
 			showMenu()
 		}
