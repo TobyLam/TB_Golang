@@ -85,8 +85,54 @@ func (this *UserProcess) Register(userId int, userPwd string, userName string) (
 	return
 }
 
+/**
+ * 退出登录
+ */
+func (this *UserProcess) Logout() (err error) {
+	//链接与用户id均取自当前用户CurUser
+
+	// 将用户离线信息发送给服务端（状态变化NotifyUserStatusMes）
+	notifyUserStatusMes := &message.NotifyUserStatusMes{
+		UserId: CurUser.UserId,
+		Status: message.UserOffline,
+	}
+
+	// 序列化 notifyUserStatusMes
+	data, err := json.Marshal(notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("logout json.Marshal() err=", err)
+		return
+	}
+
+	mes := &message.Message{
+		Type: message.NotifyUserStatusMesType,
+		Data: string(data),
+	}
+
+	// 序列化mes
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("logout json.Marshal() err=", err)
+		return
+	}
+
+	//创建 Transfer 实例
+	tf := &utils.Transfer{
+		Conn: CurUser.Conn,
+	}
+
+	//发送消息
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("logout tf.WritePkg() err=", err)
+		return
+	}
+
+	return
+}
+
 // 用户登录
-func (this *UserProcess) Login(userId int, userPwd string) (err error) {
+func (this *UserProcess) Login(userId int, userPwd string, loginStatus *bool) (err error) {
 
 	//1.连接到服务器
 	conn, err := net.Dial("tcp", "localhost:8889")
@@ -172,10 +218,12 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 		//则接收并显示在客户端的终端
 		go serverProcessMes(conn)
 
+		*loginStatus = true
+
 		//1.显示登录成功的菜单..
 		fmt.Printf("--------恭喜%s登录成功----------\n", CurUser.UserName)
-		for {
-			showMenu()
+		for *loginStatus {
+			showMenu(loginStatus)
 		}
 
 	} else {

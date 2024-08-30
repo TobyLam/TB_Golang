@@ -41,6 +41,13 @@ func (this *Processor) serverProcessMes(mes *message.Message) (err error) {
 		smsProcess := &process2.SmsProcess{}
 		err = smsProcess.SendMes(mes)
 
+	case message.NotifyUserStatusMesType:
+		//处理用户离线
+		up := &process2.UserProcess{
+			Conn: this.Conn,
+		}
+		up.DealUserStatus(mes)
+
 	default:
 		fmt.Println("消息类型不存在，无法处理...")
 	}

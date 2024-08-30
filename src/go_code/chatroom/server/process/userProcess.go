@@ -16,6 +16,82 @@ type UserProcess struct {
 	UserId int
 }
 
+/**
+ * 区分状态变化消息 的 状态 ，分别处理相应事务
+ */
+func (this *UserProcess) DealUserStatus(mes *message.Message) {
+	// 声明一个用户状态变化消息实例
+	notifyUserStatusMes := &message.NotifyUserStatusMes{}
+	// 反序列化mes,并赋值给notifyUserStatusMes
+	err := json.Unmarshal([]byte(mes.Data), &notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("DealUserStatus json.Unmarshal() err=", err)
+		return
+	}
+
+	// 判断用户是否离线
+	switch notifyUserStatusMes.Status {
+	case message.UserOffline:
+		// 删除在线用户
+		userMgr.DelOnlineUser(notifyUserStatusMes.UserId)
+		// 通知其他用户 有用户离线
+		this.NotifyOthersOfflineUser(notifyUserStatusMes)
+	default:
+		fmt.Println("暂不处理 非离线 状态业务...")
+	}
+}
+
+/**
+ * 通知在线用户有用户离线
+ */
+func (this *UserProcess) NotifyOthersOfflineUser(notifyUserStatusMes *message.NotifyUserStatusMes) {
+	//遍历 onlineUsers,逐个发送 NotifyUserStatusMes
+	for _, up := range userMgr.onlineUsers {
+		//过滤当前用户
+		//if id == userId {
+		//	continue
+		//}
+		//通知
+		this.NotifyMeOffline(notifyUserStatusMes, up.Conn)
+	}
+}
+
+/**
+ * 通知单个在线用户 有用户离线
+ */
+func (this *UserProcess) NotifyMeOffline(notifyUserStatusMes *message.NotifyUserStatusMes, conn net.Conn) {
+	//组装NotifyUserStatusMes
+	var mes message.Message
+	mes.Type = message.NotifyUserStatusMesType
+
+	//序列化notifyUserStatusMes
+	data, err := json.Marshal(notifyUserStatusMes)
+	if err != nil {
+		fmt.Println("json.Marshal() err=", err)
+		return
+	}
+	//将序列化的notifyUserStatusMes赋值给mes.Data
+	mes.Data = string(data)
+
+	//序列化mes,准备发送
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal() err=", err)
+		return
+	}
+
+	// 创建 Transfer实例
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Println("NotifyMeOffline err=", err)
+		return
+	}
+
+}
+
 // 通知所有在线用户
 // userId 通知其他的在线用户，上线
 func (this *UserProcess) NotifyOthersOnlineUser(userId int) {
@@ -31,6 +107,9 @@ func (this *UserProcess) NotifyOthersOnlineUser(userId int) {
 	}
 }
 
+/**
+ * 通知单个在线用户有用户在线
+ */
 func (this *UserProcess) NotifyMeOnline(userId int) {
 	//组装NotifyUserStatusMes
 	var mes message.Message

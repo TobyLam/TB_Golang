@@ -14,13 +14,30 @@ var CurUser model.CurUser //在用户登录成功后，完成对CurUser的初始
 func outputOnlineUser() (userNum int, err error) {
 	//遍历onlineUsers
 	fmt.Println("当前在线用户列表：")
+
+	onlineUsersNum := 0
+	offlineUsersNum := 0
+
 	if userNum = len(onlineUsers); len(onlineUsers) == 0 {
 		fmt.Println("其他用户都下线了...")
 	} else {
-		for id, _ := range onlineUsers {
-			fmt.Println("用户id：\t", id)
+		for _, val := range onlineUsers {
+			if val.UserStatus == message.UserOffline {
+				offlineUsersNum++
+			} else {
+				onlineUsersNum++
+			}
 		}
 	}
+
+	if onlineUsersNum > 0 {
+		for id, val := range onlineUsers {
+			if val.UserStatus == message.UserOnline {
+				fmt.Println("用户id：\t", id)
+			}
+		}
+	}
+
 	fmt.Println()
 	return
 }

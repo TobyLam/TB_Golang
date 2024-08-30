@@ -16,6 +16,8 @@ func main() {
 	//接收用户的选择
 	var key int
 
+	var loginStatus bool = false
+
 	//循环显示目录
 	for true {
 		fmt.Println("------------欢迎登录多人聊天系统---------")
@@ -36,7 +38,7 @@ func main() {
 			//完成登录
 			//1.创建一个UserProcess的实例
 			up := &process.UserProcess{}
-			up.Login(userId, userPwd)
+			up.Login(userId, userPwd, &loginStatus)
 
 		case 2:
 

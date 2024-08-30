@@ -6,17 +6,16 @@ import (
 	"go_code/chatroom/client/utils"
 	"go_code/chatroom/common/message"
 	"net"
-	"os"
 )
 
 // 显示登录成功后的界面..
-func showMenu() {
+func showMenu(loginStatus *bool) {
 	fmt.Println("-----------请选择----------")
 	fmt.Println("--------1. 显示在线用户列表----------")
 	fmt.Println("--------2. 私聊----------")
 	fmt.Println("--------3. 群发----------")
 	fmt.Println("--------4. 信息列表----------")
-	fmt.Println("--------5. 退出系统----------")
+	fmt.Println("--------5. 退出登录----------")
 	fmt.Println("请选择（1-5）：")
 
 	var key int
@@ -54,9 +53,11 @@ func showMenu() {
 		fmt.Println("信息列表")
 
 	case 5:
-		fmt.Println("你选择退出了系统...")
-
-		os.Exit(0)
+		fmt.Println("你选择退出了登录...")
+		userProcess := &UserProcess{}
+		userProcess.Logout()
+		*loginStatus = false
+		/*os.Exit(0)*/
 	default:
 		fmt.Println("你输入的选项不正确...")
 	}
