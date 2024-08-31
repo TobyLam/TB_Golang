@@ -11,13 +11,15 @@ var (
 )
 
 type UserMgr struct {
-	onlineUsers map[int]*UserProcess //在线用户，[当前登录用户id]关联的用户处理实例（包含链接和当前用户id，方便后续操作）
+	onlineUsers    map[int]*UserProcess //在线用户，[当前登录用户id]关联的用户处理实例（包含链接和当前用户id，方便后续操作）
+	offlineUserIds map[int][]int        //离线用户id的map
 }
 
 // userMgr初始化
 func init() {
 	userMgr = &UserMgr{
-		onlineUsers: make(map[int]*UserProcess, 1024), //初始化，长度1024
+		onlineUsers:    make(map[int]*UserProcess, 1024), //初始化，长度1024
+		offlineUserIds: make(map[int][]int, 1024),        //初始化，长度为0
 	}
 }
 

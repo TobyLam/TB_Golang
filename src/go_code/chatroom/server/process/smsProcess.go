@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go_code/chatroom/common/message"
+	"go_code/chatroom/server/model"
 	"go_code/chatroom/server/utils"
 	"net"
 )
@@ -76,19 +77,88 @@ func (this *SmsProcess) SendGroupMes(mes *message.Message) (err error) {
 		return
 	}
 
-	//遍历服务器端的onlineUsers map[int]*UserProcess
-	//将消息转发出去
-	for id, up := range userMgr.onlineUsers {
-		//过滤掉发送者
-		if id == smsMes.UserId {
+	fmt.Println("开始存入Redis")
+	// 将群发信息保存到redis
+	err = model.MySmsDao.SaveSms(&smsMes)
+	if err != nil {
+		fmt.Println("SaveSms() err=", err)
+		return
+	}
+	fmt.Println("存完了")
+
+	// 获取注册用户id切片
+	userIdsSlice, _ := model.MyUserDao.UserIds()
+
+	onlineUserNum := 0 //在线用户数量
+	for i := range userMgr.onlineUsers {
+		if i == 0 {
 			continue
-		}
-		//给在线用户发送消息
-		err = this.SendMesToEachOnlineUser(&smsMes, up.Conn)
-		if err != nil {
-			fmt.Printf("群发消息给用户(id:%d)失败\n", id)
+		} else {
+			onlineUserNum++
 		}
 	}
+
+	fmt.Println("注册用户有以下")
+	fmt.Println(userIdsSlice)
+	fmt.Println("以上注册用户")
+
+	//所有用户均在线
+	if onlineUserNum == len(userIdsSlice) {
+		//遍历服务器端的onlineUsers map[int]*UserProcess
+		//将消息转发出去
+		for id, up := range userMgr.onlineUsers {
+			//过滤掉发送者
+			if id == smsMes.UserId {
+				continue
+			}
+			//给在线用户发送消息
+			err = this.SendMesToEachOnlineUser(&smsMes, up.Conn)
+			if err != nil {
+				fmt.Printf("群发消息给用户(id:%d)失败\n", id)
+			}
+		}
+
+		//删除缓存的消息
+		fmt.Println("全员在线，开始删除消息")
+		model.MySmsDao.DelSms(smsMes.UserId)
+		fmt.Println("删完了。。")
+	} else { //存在离线用户
+
+		for _, id := range userIdsSlice {
+			//判断用户是否在线
+			up, ok := userMgr.onlineUsers[id]
+			if ok {
+				//用户在线
+				//直接发消息
+				//过滤掉发送者
+				if id == smsMes.UserId {
+					continue
+				}
+				//给在线用户发送消息
+				err = this.SendMesToEachOnlineUser(&smsMes, up.Conn)
+				if err != nil {
+					fmt.Printf("群发消息给用户(id:%d)失败\n", id)
+				}
+
+			} else {
+				//用户离线
+				//保存离线用户id 切片
+				userMgr.offlineUserIds[smsMes.UserId] = make([]int, 0)
+				userMgr.offlineUserIds[smsMes.UserId] = append(userMgr.offlineUserIds[smsMes.UserId], id)
+			}
+		}
+
+		// 离线人数数量
+		offlinenum := len(userIdsSlice) - onlineUserNum
+		// 在MyUserMgr.offlineUserIds[smsMes.UserId] 中最后再增加一个标识位
+		// 该标志位，标识还有多少用户离线未收到群发消息
+		userMgr.offlineUserIds[smsMes.UserId] = append(userMgr.offlineUserIds[smsMes.UserId], offlinenum)
+
+	}
+	fmt.Println("离线用户如下")
+	fmt.Println(userMgr.offlineUserIds)
+	fmt.Println("以上就是离线用户")
+
 	return
 }
 

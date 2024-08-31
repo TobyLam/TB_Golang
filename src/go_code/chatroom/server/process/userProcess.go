@@ -279,5 +279,49 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		Conn: this.Conn,
 	}
 	err = tf.WritePkg(data)
+
+	//发送离线信息
+	if loginResMes.Code == 200 {
+		//遍历离线用户列表切片
+		//判断是否存在未发送的离线信息
+		for sendUserId, intSlice := range userMgr.offlineUserIds {
+			for index, offlineId := range intSlice {
+				if offlineId != loginMes.UserId {
+					//非当前登录成功用户
+					continue
+				} else {
+					//存在离线留言
+					sms, _ := model.MySmsDao.GetSms(sendUserId)
+					//sms中的ReceiveId为空，赋值当前登录成功的用户id
+					sms.ReceiverId = loginMes.UserId
+
+					//创建一个smsProcess实例
+					smsProcess := &SmsProcess{}
+					err = smsProcess.SendMesToEachOnlineUser(sms, userMgr.onlineUsers[loginMes.UserId].Conn)
+					if err == nil {
+						//发送成功
+						// 将offlineUserIds中的该id删除
+						// 由于在切片中删除较困难，选择将其值设置为-1
+						intSlice[index] = -1
+					} else {
+						fmt.Println("用户", loginMes.UserId, "留言信息发送失败")
+					}
+
+					// MyUserMgr.offlineUserIds 的 intslice 标识位自动减一
+					intSlice[len(intSlice)-1] = intSlice[len(intSlice)-1] - 1
+					// 跳出该轮遍历
+					break
+				}
+			}
+
+			// 判断 MyUserMgr.offlineUserIds 的 intslice 标识位是否为0
+			if intSlice[len(intSlice)-1] == 0 {
+				// 删除数据库中缓存的信息
+				model.MySmsDao.DelSms(sendUserId)
+				// fmt.Println("缓存删除")
+			}
+		}
+	}
+
 	return
 }

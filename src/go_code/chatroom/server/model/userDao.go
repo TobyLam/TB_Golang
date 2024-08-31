@@ -107,3 +107,24 @@ func (this *UserDao) Register(user *message.User) (err error) {
 	}
 	return
 }
+
+/**
+ * 获取所有注册用户id
+ */
+func (this *UserDao) UserIds() (userIdsSlice []int, err error) {
+	conn := this.pool.Get()
+	//延时关闭
+	defer conn.Close()
+
+	userIdsSlice = make([]int, 0)
+
+	res, err := redis.Ints(conn.Do("hkeys", "users"))
+	if err != nil {
+		fmt.Println("userDao UserIds() conn.Do(hkeys) err=", err)
+		return
+	}
+	// 追加数据
+	userIdsSlice = append(userIdsSlice, res...)
+
+	return
+}

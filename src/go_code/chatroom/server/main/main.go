@@ -38,6 +38,7 @@ func initUserDao() {
 	//注意初始化顺序问题
 	//initPool -> initUserDao
 	model.MyUserDao = model.NewUserDao(pool)
+	model.MySmsDao = model.NewSmsDao(pool)
 }
 
 func main() {
