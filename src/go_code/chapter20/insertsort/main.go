@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 /**
@@ -30,7 +32,7 @@ func InsertSortAsc(arr *[7]int) {
 }
 
 // 插入排序【降序】
-func InsertSortDesc(arr *[7]int) {
+func InsertSortDesc(arr *[80000]int) {
 
 	//完成第一次,给第二个元素找到合适的位置并插入,默认第一个元素即为有序列表
 	for i := 1; i < len(arr); i++ {
@@ -52,26 +54,35 @@ func InsertSortDesc(arr *[7]int) {
 			arr[insertIndex+1] = insertVal
 		}
 
-		fmt.Printf("第%d次插入后 %v\n", i, *arr)
+		//fmt.Printf("第%d次插入后 %v\n", i, *arr)
 	}
 
 }
 
 func main() {
-	arr := [7]int{23, 0, 12, 56, 34, -1, 55}
+	//arr := [7]int{23, 0, 12, 56, 34, -1, 55}
 
-	fmt.Println("原始数组=", arr)
+	//fmt.Println("原始数组=", arr)
+
+	var arr [80000]int
+	for i := 0; i < 80000; i++ {
+		arr[i] = rand.Intn(900000)
+	}
+
+	start := time.Now().Unix()
 	InsertSortDesc(&arr)
+	end := time.Now().Unix()
+	fmt.Printf("插入排序耗时=%d秒\n", end-start)
 
 	fmt.Println("main 函数")
-	fmt.Println(arr)
+	//fmt.Println(arr)
 
-	arr2 := [7]int{23, 0, 12, 56, 34, -1, 55}
-
-	fmt.Println("原始数组=", arr2)
-	InsertSortAsc(&arr2)
-
-	fmt.Println("main 函数")
-	fmt.Println(arr2)
+	//arr2 := [7]int{23, 0, 12, 56, 34, -1, 55}
+	//
+	//fmt.Println("原始数组=", arr2)
+	//InsertSortAsc(&arr2)
+	//
+	//fmt.Println("main 函数")
+	//fmt.Println(arr2)
 
 }

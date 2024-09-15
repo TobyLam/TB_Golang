@@ -1,13 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
 // 快速排序
 // 说明
 // 1.left表示 数组左边的下标
 // 2.right表示 数组右边的下标
 // 3.array 表示要排序的数组
-func QuickSort(left int, right int, array *[10]int) {
+func QuickSort(left int, right int, array *[8000000]int) {
 	//fmt.Println("__________________________")
 	l := left
 	r := right
@@ -45,8 +49,8 @@ func QuickSort(left int, right int, array *[10]int) {
 		//交换左右的值
 		//fmt.Printf("arr[%d]=%d与arr[%d]=%d进行交换\n", l, array[l], r, array[r])
 		array[l], array[r] = array[r], array[l]
-		fmt.Println(*array)
-		fmt.Println()
+		/*fmt.Println(*array)
+		fmt.Println()*/
 		//fmt.Println("此时的数组", array)
 		//fmt.Println()
 
@@ -85,11 +89,22 @@ func QuickSort(left int, right int, array *[10]int) {
 
 func main() {
 
-	arr := [10]int{-9, 78, 0, 23, -567, 70, 123, 90, 0, -23}
-	fmt.Println("初始", arr)
-	fmt.Println()
+	//arr := [10]int{-9, 78, 0, 23, -567, 70, 123, 90, 0, -23}
+	/*fmt.Println("初始", arr)
+	fmt.Println()*/
+
+	var arr [8000000]int
+	for i := 0; i < 8000000; i++ {
+		arr[i] = rand.Intn(900000)
+	}
+
+	start := time.Now().Unix()
 
 	QuickSort(0, len(arr)-1, &arr)
-	fmt.Println("main...")
-	fmt.Println(arr)
+
+	end := time.Now().Unix()
+	fmt.Printf("快速排序耗时=%d秒\n", end-start)
+
+	/*fmt.Println("main...")
+	fmt.Println(arr)*/
 }

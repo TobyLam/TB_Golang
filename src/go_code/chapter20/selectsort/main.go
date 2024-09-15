@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 //选择排序，遍历选择最值，然后和最值交换位置
@@ -11,7 +13,7 @@ import (
 //效率比较： 选择排序在获取到最值之后才进行交换，冒泡排序比较完成则交换，选择排序的效率更高
 
 // 编写函数selectSort
-func selectSort(arr *[6]int) {
+func selectSort(arr *[80000]int) {
 
 	//标准的访问方式
 	//(*arr)[1] = 600
@@ -36,15 +38,24 @@ func selectSort(arr *[6]int) {
 			arr[j], arr[maxIndex] = arr[maxIndex], arr[j]
 		}
 
-		fmt.Printf("第%d次 %v\n  ", j+1, *arr)
+		//fmt.Printf("第%d次 %v\n  ", j+1, *arr)
 	}
 
 }
 
 func main() {
 	//定义一个数组，从大到小排
-	arr := [6]int{10, 34, 19, 100, 80, 789}
+	//arr := [6]int{10, 34, 19, 100, 80, 789}
+
+	var arr [80000]int
+	for i := 0; i < 80000; i++ {
+		arr[i] = rand.Intn(900000)
+	}
+	start := time.Now().Unix()
 	selectSort(&arr)
+	end := time.Now().Unix()
+	fmt.Printf("选择排序耗时=%d秒\n", end-start)
+
 	//遍历
-	fmt.Println(arr)
+	//fmt.Println(arr)
 }
