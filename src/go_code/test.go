@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 var name = "tom" //全局变量
@@ -22,4 +23,7 @@ func main() {
 	test01()          //tom
 	test02()          //jack
 	test01()          //tom
+
+	mySlice := []int{1, 0, -123}
+	sort.Ints(mySlice)
 }
