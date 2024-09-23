@@ -7,8 +7,9 @@ import (
 
 // User 结构体
 type User struct {
-	ID   int
-	Name string
+	ID     int
+	Name   string
+	Detail string
 }
 
 // AddUser 添加User的方法一
@@ -42,4 +43,56 @@ func (user *User) AddUser2() (err error) {
 		return
 	}
 	return
+}
+
+// GetUserById 根据用户的id从数据库中查询一条记录
+func (user *User) GetUserById() (info *User, err error) {
+	//sql语句
+	sqlStr := "select id,name,detail from go_user where id = ?"
+	//执行
+	row := utils.Db.QueryRow(sqlStr, user.ID)
+	//声明
+	var id int
+	var name string
+	var detail string
+	err = row.Scan(&id, &name, &detail)
+	if err != nil {
+		return
+	}
+	info = &User{
+		ID:     id,
+		Name:   name,
+		Detail: detail,
+	}
+	return
+}
+
+// GetUsers 获取数据库中所有的记录
+func (user *User) GetUsers() ([]*User, error) {
+	//sql语句
+	sqlStr := "select `id`,`name`,`detail` from go_user"
+	//执行
+	rows, err := utils.Db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	//创建User切片
+	var users []*User
+	for rows.Next() {
+		//声明
+		var id int
+		var name string
+		var detail string
+		err := rows.Scan(&id, &name, &detail)
+		if err != nil {
+			return nil, err
+		}
+		u := &User{
+			ID:     id,
+			Name:   name,
+			Detail: detail,
+		}
+		users = append(users, u)
+	}
+	return users, err
 }
