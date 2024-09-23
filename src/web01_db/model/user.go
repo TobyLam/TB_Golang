@@ -70,7 +70,7 @@ func (user *User) GetUserById() (info *User, err error) {
 // GetUsers 获取数据库中所有的记录
 func (user *User) GetUsers() ([]*User, error) {
 	//sql语句
-	sqlStr := "select `id`,`name`,`detail` from go_user"
+	sqlStr := "select `id`,`name`,ifnull(`detail`,'') from go_user"
 	//执行
 	rows, err := utils.Db.Query(sqlStr)
 	if err != nil {
