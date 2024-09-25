@@ -1,11 +1,8 @@
 package main
 
 import (
-	_ "encoding/json"
-	_ "fmt"
 	"html/template"
 	"net/http"
-	_ "web02_req/model"
 )
 
 // 创建处理器函数
