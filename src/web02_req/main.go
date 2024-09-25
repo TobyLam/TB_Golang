@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"web02_req/model"
 )
 
 // 创建处理器函数
@@ -46,8 +48,33 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func testRedire(w http.ResponseWriter, r *http.Request) {
+	//设置响应头中的Location属性
+	w.Header().Set("Location", "https://www.baidu.com")
+	//设置响应状态码
+	w.WriteHeader(302)
+}
+
+func testJsonRes(w http.ResponseWriter, r *http.Request) {
+	//设置响应内容的类型
+	w.Header().Set("Content-Type", "application/json")
+	//创建User
+	user := model.User{
+		ID:     1,
+		Name:   "景元元",
+		Detail: "神霄雷府总司驱雷掣电追魔扫秽天君",
+	}
+	//将User转换成Json格式
+	data, _ := json.Marshal(user)
+	//将json格式数据，响应给客户端
+	w.Write(data)
+}
+
 func main() {
 
 	http.HandleFunc("/hello", handler)
+	http.HandleFunc("/testJson", testJsonRes)
+	http.HandleFunc("/testRedirect", testRedire)
+
 	http.ListenAndServe(":8080", nil)
 }
