@@ -24,6 +24,11 @@
                 }
             });
 
+            //切换span标签中的信息
+            if("{{.}}"=="用户名或密码不正确！"){
+                //设置span标签中的文本值
+                $("#msg").text("用户名或密码不正确！");
+            }
 
         });
     </script>
@@ -43,7 +48,7 @@
         <div class="login_form">
             <div class="login_box">
                 <div class="tit">
-                    <h1>千岩军</h1>
+                    <h1>千岩军登录</h1>
                     <a href="/pages/user/regist.html">立即注册</a>
                 </div>
                 <div class="msg_cont">
@@ -70,9 +75,9 @@
     </div>
 </div>
 <div id="bottom">
-			<span>
-				璃月书集.Copyright &copy;2024
-			</span>
+        <span>
+            璃月书集.Copyright &copy;2024
+        </span>
 </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bookstore001/controller"
 	"html/template"
 	"net/http"
 )
@@ -21,6 +22,11 @@ func main() {
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("views/pages"))))
 
 	http.HandleFunc("/main", IndexHandler)
+
+	//去登陆
+	http.HandleFunc("/login", controller.Login)
+	//去注册
+	http.HandleFunc("/regist", controller.Regist)
 
 	http.ListenAndServe(":8080", nil)
 }

@@ -13,12 +13,12 @@ func TestUser(t *testing.T) {
 }
 
 func testLogin(t *testing.T) {
-	user, _ := checkUserNameAndPassword("钟离", "123456")
+	user, _ := CheckUserNameAndPassword("钟离", "123456")
 	fmt.Println("获取用户信息是：", user)
 }
 
 func testRegist(t *testing.T) {
-	user, _ := checkUserName("钟离")
+	user, _ := CheckUserName("钟离")
 	fmt.Println("获取用户信息是：", user)
 }
 
