@@ -15,7 +15,7 @@
     <script>
         $(function(){
             //给注册按钮绑定单击事件
-            $("#sub_btn").click(function(){
+            $("#sub_btn").on('click',function(){
                 //获取用户输入的用户名
                 var username = $("#username").val();
                 //设置验证用户名的正则表达式
@@ -65,7 +65,7 @@
 
             //发送Ajax请求验证用户名是否存在
             //给输入用户名的文本框绑定change事件
-            $("#username").change(function(){
+            $("#username").on('change',function(){
                 //获取用户输入的用户名
                 var username = $(this).val();
                 //设置请求地址

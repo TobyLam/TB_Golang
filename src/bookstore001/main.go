@@ -27,6 +27,8 @@ func main() {
 	http.HandleFunc("/login", controller.Login)
 	//去注册
 	http.HandleFunc("/regist", controller.Regist)
+	//通过Ajax请求验证用户名是否可用
+	http.HandleFunc("/checkUserName", controller.CheckUserName)
 
 	http.ListenAndServe(":8080", nil)
 }
