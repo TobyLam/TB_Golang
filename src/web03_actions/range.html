@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{range .}}
+        遍历到的元素是：{{.}}
+        <br>
+        {{.LastName}}
+    {{else}}
+        没有遍历到任何元素
+    {{end}}
+</body>
+</html>

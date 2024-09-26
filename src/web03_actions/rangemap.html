@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {{range $k,$v := .}}
+        健是{{$k}},值是{{$v}}
+    {{else}}
+        没有遍历到任何元素
+    {{end}}
+</body>
+</html>
