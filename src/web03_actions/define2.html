@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<!-- 定义模板 -->
+{{define "model"}}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{template "content"}}
+</body>
+</html>
+{{end}}
+
+<!-- 块动作，相当于一个默认的模板 -->
+{{block "content" .}}
+    基尼奇
+{{end}}

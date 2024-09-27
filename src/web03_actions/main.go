@@ -76,6 +76,29 @@ func testTemplate(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, "www")
 }
 
+func testDefine(w http.ResponseWriter, r *http.Request) {
+	//解析模板文件
+	t := template.Must(template.ParseFiles("define.html"))
+	//执行
+	t.ExecuteTemplate(w, "model", "")
+}
+
+func testDefine2(w http.ResponseWriter, r *http.Request) {
+	//解析模板文件
+	age := 17
+	var t *template.Template
+	if age < 18 {
+		//t = template.Must(template.ParseFiles("define2.html", "content2.html"))
+		//满足条件，但是未解析content2.html，此时使用块动作block
+		t = template.Must(template.ParseFiles("define2.html"))
+
+	} else {
+		t = template.Must(template.ParseFiles("define2.html", "content1.html"))
+	}
+	//执行
+	t.ExecuteTemplate(w, "model", "")
+}
+
 func main() {
 	http.HandleFunc("/testIf", testIf)
 	http.HandleFunc("/testRange", testRange)
@@ -85,6 +108,8 @@ func main() {
 
 	http.HandleFunc("/testWith", testWith)
 	http.HandleFunc("/testTemplate", testTemplate)
+	http.HandleFunc("/testDefine", testDefine)
+	http.HandleFunc("/testDefine2", testDefine2)
 
 	http.ListenAndServe(":8080", nil)
 }
