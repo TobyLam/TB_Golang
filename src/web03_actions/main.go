@@ -62,10 +62,29 @@ func actionfunc(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, time.Now())
 }
 
+func testWith(w http.ResponseWriter, r *http.Request) {
+	//解析模板文件
+	t := template.Must(template.ParseFiles("with.html"))
+	//执行
+	t.Execute(w, "狸猫")
+}
+
+func testTemplate(w http.ResponseWriter, r *http.Request) {
+	//解析模板文件
+	t := template.Must(template.ParseFiles("template1.html", "template2.html"))
+	//执行
+	t.Execute(w, "www")
+}
+
 func main() {
 	http.HandleFunc("/testIf", testIf)
 	http.HandleFunc("/testRange", testRange)
+
 	http.HandleFunc("/testRangeMap", testRangeMap)
 	http.HandleFunc("/testRangeChannel", actionfunc)
+
+	http.HandleFunc("/testWith", testWith)
+	http.HandleFunc("/testTemplate", testTemplate)
+
 	http.ListenAndServe(":8080", nil)
 }
