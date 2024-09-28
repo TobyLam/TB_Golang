@@ -61,10 +61,8 @@ func GetBookByID(bookId string) (*model.Book, error) {
 	//创建一个book
 	book := &model.Book{}
 	//字段赋值
-	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
-	if err != nil {
-		return nil, err
-	}
+	row.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
+
 	return book, nil
 }
 
