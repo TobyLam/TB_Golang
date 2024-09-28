@@ -30,5 +30,8 @@ func main() {
 	//通过Ajax请求验证用户名是否可用
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
 
+	//获取所有图书
+	http.HandleFunc("/getBooks", controller.GetBooks)
+
 	http.ListenAndServe(":8080", nil)
 }
