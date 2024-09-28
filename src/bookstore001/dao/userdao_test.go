@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"bookstore001/model"
 	"fmt"
 	"testing"
 )
@@ -33,7 +34,8 @@ func testSave(t *testing.T) {
 
 func TestBook(t *testing.T) {
 	fmt.Println("测试bookdao中的相关函数")
-	t.Run("测试获取所有图书", testGetBooks)
+	//t.Run("测试获取所有图书", testGetBooks)
+	t.Run("测试添加图书", testAddBook)
 }
 
 func testGetBooks(t *testing.T) {
@@ -42,4 +44,17 @@ func testGetBooks(t *testing.T) {
 	for k, v := range books {
 		fmt.Printf("第%d本图书的信息是：%v\n", k+1, v)
 	}
+}
+
+func testAddBook(t *testing.T) {
+	b := &model.Book{
+		Title:   "封神演绎",
+		Author:  "许仲琳",
+		Price:   100,
+		Sales:   1000,
+		Stock:   2000,
+		ImgPath: "/static/img/default.jpg",
+	}
+	//调用添加图书的函数
+	AddBook(b)
 }
