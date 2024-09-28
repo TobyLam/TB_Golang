@@ -54,3 +54,45 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	//调用GetBooks函数再次查询一次列表
 	GetBooks(w, r)
 }
+
+// 修改图书的页面
+func ToUpdateBookPage(w http.ResponseWriter, r *http.Request) {
+	//获取要修改的图书的id
+	bookId := r.FormValue("bookId")
+	//调用bookdao中获取图书的函数
+	book, _ := dao.GetBookByID(bookId)
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/manager/book_modify.html"))
+	//执行
+	t.Execute(w, book)
+}
+
+// 修改图书
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	//获取图书信息
+	bookID := r.PostFormValue("bookId")
+	title := r.PostFormValue("title")
+	author := r.PostFormValue("author")
+	price := r.PostFormValue("price")
+	sales := r.PostFormValue("sales")
+	stock := r.PostFormValue("stock")
+	//类型转换
+	fPrice, _ := strconv.ParseFloat(price, 64)
+	iSales, _ := strconv.ParseInt(sales, 10, 0)
+	iStock, _ := strconv.ParseInt(stock, 10, 0)
+	ibookID, _ := strconv.ParseInt(bookID, 10, 0)
+	//创建book
+	book := &model.Book{
+		ID:      int(ibookID),
+		Title:   title,
+		Author:  author,
+		Price:   fPrice,
+		Sales:   int(iSales),
+		Stock:   int(iStock),
+		ImgPath: "/static/img/default.jpg",
+	}
+	//调用bookdao中更新图书的函数
+	dao.UpdateBook(book)
+	//调用GetBooks处理器函数再次查询一次数据库
+	GetBooks(w, r)
+}

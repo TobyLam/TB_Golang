@@ -51,3 +51,31 @@ func DeleteBook(bookID string) error {
 
 	return nil
 }
+
+// 根据图书的id从数据库中查询出一本图书
+func GetBookByID(bookId string) (*model.Book, error) {
+	//sql语句
+	sqlStr := "select id,title,author,price,sales,stock,img_path from books where id = ?"
+	//执行
+	row := utils.Db.QueryRow(sqlStr, bookId)
+	//创建一个book
+	book := &model.Book{}
+	//字段赋值
+	err := row.Scan(&book.ID, &book.Title, &book.Author, &book.Price, &book.Sales, &book.Stock, &book.ImgPath)
+	if err != nil {
+		return nil, err
+	}
+	return book, nil
+}
+
+// 根据图书的id修改图书信息
+func UpdateBook(b *model.Book) error {
+	//sql语句
+	sqlStr := "update books set title=?,author=?,price=?,sales=?,stock=? where id=?"
+	//执行
+	_, err := utils.Db.Exec(sqlStr, b.Title, b.Author, b.Price, b.Sales, b.Stock, b.ID)
+	if err != nil {
+		return nil
+	}
+	return nil
+}
