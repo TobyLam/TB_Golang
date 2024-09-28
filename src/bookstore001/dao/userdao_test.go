@@ -38,7 +38,8 @@ func TestBook(t *testing.T) {
 	//t.Run("测试添加图书", testAddBook)
 	//t.Run("测试删除图书", testDeleteBook)
 	//t.Run("测试获取一本图书", testGetBook)
-	t.Run("测试更新图书", TestUpdateBook)
+	//t.Run("测试更新图书", TestUpdateBook)
+	t.Run("测试获取分页的图书", testGetPageBooks)
 }
 
 func testGetBooks(t *testing.T) {
@@ -85,4 +86,15 @@ func TestUpdateBook(t *testing.T) {
 	}
 	//调用修改图书的函数
 	UpdateBook(b)
+}
+
+func testGetPageBooks(t *testing.T) {
+	page, _ := GetPageBooks("9")
+	fmt.Println(" 当前页是:", page.PageNo)
+	fmt.Println(" 总页数是:", page.TotalPageNo)
+	fmt.Println(" 总记录数是:", page.TotalRecord)
+	fmt.Println(" 当前页中的图书有:")
+	for i, v := range page.Books {
+		fmt.Printf("第%d本图书信息是：%v\n", i+1, v)
+	}
 }
