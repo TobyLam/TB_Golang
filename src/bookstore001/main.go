@@ -36,5 +36,8 @@ func main() {
 	//添加图书
 	http.HandleFunc("/addBook", controller.AddBook)
 
+	//删除图书
+	http.HandleFunc("/deleteBook", controller.DeleteBook)
+
 	http.ListenAndServe(":8080", nil)
 }

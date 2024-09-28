@@ -44,3 +44,13 @@ func AddBook(w http.ResponseWriter, r *http.Request) {
 	//调用GetBooks函数再次查询一次列表
 	GetBooks(w, r)
 }
+
+// 删除图书
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	//获取要删除的图书的id
+	bookID := r.FormValue("bookId")
+	//调用bookdao中删除图书的函数
+	dao.DeleteBook(bookID)
+	//调用GetBooks函数再次查询一次列表
+	GetBooks(w, r)
+}

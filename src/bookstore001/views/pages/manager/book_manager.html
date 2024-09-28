@@ -8,7 +8,7 @@
     <script>
         $(function(){
             //给删除图书的超链接绑定单击事件
-            $(".deleteBook").click(function(){
+            $(".deleteBook").on("click",function(){
                 //获取书名
                 var title = $(this).attr("id");
                 // var flag = confirm("确定要删除【"+title+"】这本图书吗？");

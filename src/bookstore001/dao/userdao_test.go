@@ -36,6 +36,7 @@ func TestBook(t *testing.T) {
 	fmt.Println("测试bookdao中的相关函数")
 	//t.Run("测试获取所有图书", testGetBooks)
 	t.Run("测试添加图书", testAddBook)
+	t.Run("测试删除图书", testDeleteBook)
 }
 
 func testGetBooks(t *testing.T) {
@@ -57,4 +58,10 @@ func testAddBook(t *testing.T) {
 	}
 	//调用添加图书的函数
 	AddBook(b)
+}
+
+func testDeleteBook(t *testing.T) {
+
+	//调用删除图书的函数
+	DeleteBook("47")
 }
