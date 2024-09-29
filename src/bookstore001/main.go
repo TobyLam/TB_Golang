@@ -2,17 +2,8 @@ package main
 
 import (
 	"bookstore001/controller"
-	"html/template"
 	"net/http"
 )
-
-// IndexHandler 去首页
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	//解析模板
-	t := template.Must(template.ParseFiles("views/index.html"))
-	//执行
-	t.Execute(w, "")
-}
 
 func main() {
 	//设置处理静态资源,如css和js
@@ -21,7 +12,7 @@ func main() {
 	//直接去html页面
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("views/pages"))))
 
-	http.HandleFunc("/main", IndexHandler)
+	http.HandleFunc("/main", controller.IndexHandler)
 
 	//去登陆
 	http.HandleFunc("/login", controller.Login)
@@ -31,7 +22,9 @@ func main() {
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
 
 	//获取所有图书
-	http.HandleFunc("/getBooks", controller.GetBooks)
+	//http.HandleFunc("/getBooks", controller.GetBooks)
+	//获取带分页的图书
+	http.HandleFunc("/getPageBooks", controller.GetPageBooks)
 	//添加图书
 	//http.HandleFunc("/addBook", controller.AddBook)
 	//删除图书

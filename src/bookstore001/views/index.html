@@ -35,51 +35,65 @@
             </div>
         </div>
 
-
+        {{range .Books}}
         <div class="b_list">
             <div class="img_div">
-                <img class="book_img" alt="" src="" />
+                <img class="book_img" alt="" src="{{.ImgPath}}" />
             </div>
             <div class="book_info">
                 <div class="book_name">
                     <span class="sp1">书名:</span>
-                    <span class="sp2"></span>
+                    <span class="sp2">{{.Title}}</span>
                 </div>
                 <div class="book_author">
                     <span class="sp1">作者:</span>
-                    <span class="sp2"></span>
+                    <span class="sp2">{{.Author}}</span>
                 </div>
                 <div class="book_price">
                     <span class="sp1">价格:</span>
-                    <span class="sp2">￥</span>
+                    <span class="sp2">￥{{.Price}}</span>
                 </div>
                 <div class="book_sales">
                     <span class="sp1">销量:</span>
-                    <span class="sp2"></span>
+                    <span class="sp2">{{.Sales}}</span>
                 </div>
                 <div class="book_amount">
                     <span class="sp1">库存:</span>
-                    <span class="sp2"></span>
+                    <span class="sp2">{{.Stock}}</span>
                 </div>
                 <div class="book_add">
-                    <button id="" class="addBook2Cart">加入购物车</button>
+                    <button id="{{.ID}}" class="addBook2Cart">加入购物车</button>
                 </div>
             </div>
         </div>
-
+        {{end}}
 
     </div>
 
     <div id="page_nav">
 
-        <a href="">首页</a>
-        <a href="">上一页</a>
-        当前是第页，共页，共条记录
-        <a href="">下一页</a>
-        <a href="">末页</a>
+        {{if .IsHasPrev}}
+        <a href="/main">首页</a>
+        <a href="/main?pageNo={{.GetPrevPageNo}}">上一页</a>
+        {{end}}
 
-        到第<input value="" name="pn" id="pn_input"/>页
+        当前是第{{.PageNo}}页，共{{.TotalPageNo}}页，共{{.TotalRecord}}条记录
+
+        {{if .IsHasNext}}
+        <a href="/main?pageNo={{.GetNextPageNo}}">下一页</a>
+        <a href="/main?pageNo={{.TotalPageNo}}">末页</a>
+        {{end}}
+
+        到第<input value="{{.PageNo}}" name="pn" id="pn_input"/>页
         <input type="button" value="确定" id="sub">
+        <script>
+            //给确定按钮绑定单击事件
+            $("#sub").click(function(){
+                //获取输入的页码
+                var pageNo = $("#pn_input").val();
+                location = "/main?pageNo="+pageNo
+            });
+        </script>
     </div>
 </div>
 

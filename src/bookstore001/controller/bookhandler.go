@@ -8,15 +8,30 @@ import (
 	"strconv"
 )
 
-// 获取所有图书
-func GetBooks(w http.ResponseWriter, r *http.Request) {
-	//调用bookdao获取所有图书的函数
-	books, _ := dao.GetBooks()
-	//解析模板文件
-	t := template.Must(template.ParseFiles("views/pages/manager/book_manager.html"))
+// IndexHandler 去首页
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	//调用bookdao中带分页的图书的函数
+	page, _ := dao.GetPageBooks(pageNo)
+	//解析模板
+	t := template.Must(template.ParseFiles("views/index.html"))
 	//执行
-	t.Execute(w, books)
+	t.Execute(w, page)
 }
+
+//// 获取所有图书
+//func GetBooks(w http.ResponseWriter, r *http.Request) {
+//	//调用bookdao获取所有图书的函数
+//	books, _ := dao.GetBooks()
+//	//解析模板文件
+//	t := template.Must(template.ParseFiles("views/pages/manager/book_manager.html"))
+//	//执行
+//	t.Execute(w, books)
+//}
 
 //// 添加图书
 //func AddBook(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +67,7 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	//调用bookdao中删除图书的函数
 	dao.DeleteBook(bookID)
 	//调用GetBooks函数再次查询一次列表
-	GetBooks(w, r)
+	GetPageBooks(w, r)
 }
 
 // 去添加、修改图书的页面
@@ -111,5 +126,20 @@ func UpdateOrAddBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//调用GetBooks处理器函数再次查询一次数据库
-	GetBooks(w, r)
+	GetPageBooks(w, r)
+}
+
+// 获取带分页的图书
+func GetPageBooks(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	//调用bookdao中带分页的图书的函数
+	page, _ := dao.GetPageBooks(pageNo)
+	//解析模板文件
+	t := template.Must(template.ParseFiles("views/pages/manager/book_manager.html"))
+	//执行
+	t.Execute(w, page)
 }

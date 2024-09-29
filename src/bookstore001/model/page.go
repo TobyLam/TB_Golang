@@ -8,3 +8,31 @@ type Page struct {
 	TotalPageNo int64   //总页数
 	TotalRecord int64   //总记录数
 }
+
+// 判断是否有上一页
+func (this *Page) IsHasPrev() bool {
+	return this.PageNo > 1
+}
+
+// 判断是否有下一页
+func (this *Page) IsHasNext() bool {
+	return this.PageNo < this.TotalPageNo
+}
+
+// 获取上一页
+func (this *Page) GetPrevPageNo() int64 {
+	if this.IsHasPrev() {
+		return this.PageNo - 1
+	} else {
+		return 1
+	}
+}
+
+// 获取下一页
+func (this *Page) GetNextPageNo() int64 {
+	if this.IsHasNext() {
+		return this.PageNo + 1
+	} else {
+		return this.TotalPageNo
+	}
+}
