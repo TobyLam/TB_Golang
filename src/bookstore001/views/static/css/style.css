@@ -2,10 +2,13 @@
 
 body {
 	overflow: hidden;
+	/*background-image: url("/static/img/background.webp");
+	background-size: cover;*/
 }
 
 * {
 	margin: 0;
+	padding:0;
 	font-family:"Microsoft Yahei";
 	color: #666;
 }
