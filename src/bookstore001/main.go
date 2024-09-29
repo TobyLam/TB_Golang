@@ -25,6 +25,8 @@ func main() {
 	//http.HandleFunc("/getBooks", controller.GetBooks)
 	//获取带分页的图书
 	http.HandleFunc("/getPageBooks", controller.GetPageBooks)
+	//
+	http.HandleFunc("/getPageBooksByPrice", controller.GetPageBooksByPrice)
 	//添加图书
 	//http.HandleFunc("/addBook", controller.AddBook)
 	//删除图书

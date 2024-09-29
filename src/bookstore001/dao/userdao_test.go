@@ -40,6 +40,7 @@ func TestBook(t *testing.T) {
 	//t.Run("测试获取一本图书", testGetBook)
 	//t.Run("测试更新图书", TestUpdateBook)
 	t.Run("测试获取分页的图书", testGetPageBooks)
+	t.Run("测试带分页和价格范围的图书", testGetPageBooksByPrice)
 }
 
 func testGetBooks(t *testing.T) {
@@ -90,6 +91,17 @@ func TestUpdateBook(t *testing.T) {
 
 func testGetPageBooks(t *testing.T) {
 	page, _ := GetPageBooks("9")
+	fmt.Println(" 当前页是:", page.PageNo)
+	fmt.Println(" 总页数是:", page.TotalPageNo)
+	fmt.Println(" 总记录数是:", page.TotalRecord)
+	fmt.Println(" 当前页中的图书有:")
+	for i, v := range page.Books {
+		fmt.Printf("第%d本图书信息是：%v\n", i+1, v)
+	}
+}
+
+func testGetPageBooksByPrice(t *testing.T) {
+	page, _ := GetPageBooksByPrice("1", "10", "30")
 	fmt.Println(" 当前页是:", page.PageNo)
 	fmt.Println(" 总页数是:", page.TotalPageNo)
 	fmt.Println(" 总记录数是:", page.TotalRecord)

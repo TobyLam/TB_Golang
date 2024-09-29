@@ -143,3 +143,33 @@ func GetPageBooks(w http.ResponseWriter, r *http.Request) {
 	//执行
 	t.Execute(w, page)
 }
+
+// 获取带分页和价格范围的图书
+func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	//获取价格范围
+	minPrice := r.FormValue("min")
+	maxPrice := r.FormValue("max")
+
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	var page *model.Page
+
+	if minPrice == "" && maxPrice == "" {
+		//调用bookdao中带分页的图书的函数
+		page, _ = dao.GetPageBooks(pageNo)
+	} else {
+		//调用bookdao中带分页和价格范围的图书的函数
+		page, _ = dao.GetPageBooksByPrice(pageNo, minPrice, maxPrice)
+		//将价格范围设置到page中
+		page.MinPrice = minPrice
+		page.MaxPrice = maxPrice
+	}
+
+	//解析模板文件
+	t := template.Must(template.ParseFiles("views/index.html"))
+	//执行
+	t.Execute(w, page)
+}
