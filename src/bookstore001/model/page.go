@@ -9,6 +9,8 @@ type Page struct {
 	TotalRecord int64   //总记录数
 	MinPrice    string
 	MaxPrice    string
+	IsLogin     bool
+	Username    string
 }
 
 // 判断是否有上一页

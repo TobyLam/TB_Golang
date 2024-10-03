@@ -39,8 +39,8 @@ func TestBook(t *testing.T) {
 	//t.Run("测试删除图书", testDeleteBook)
 	//t.Run("测试获取一本图书", testGetBook)
 	//t.Run("测试更新图书", TestUpdateBook)
-	t.Run("测试获取分页的图书", testGetPageBooks)
-	t.Run("测试带分页和价格范围的图书", testGetPageBooksByPrice)
+	//t.Run("测试获取分页的图书", testGetPageBooks)
+	//t.Run("测试带分页和价格范围的图书", testGetPageBooksByPrice)
 }
 
 func testGetBooks(t *testing.T) {
@@ -109,4 +109,29 @@ func testGetPageBooksByPrice(t *testing.T) {
 	for i, v := range page.Books {
 		fmt.Printf("第%d本图书信息是：%v\n", i+1, v)
 	}
+}
+
+func TestSession(t *testing.T) {
+	fmt.Println("测试Session相关函数")
+	//t.Run("测试添加Session", testAddSession)
+	//t.Run("测试删除Session", testDeleteSession)
+	t.Run("测试获取Session", testGetSession)
+}
+
+func testAddSession(t *testing.T) {
+	sess := &model.Session{
+		SessionID: "125648752365421",
+		UserName:  "宋江",
+		UserID:    9,
+	}
+	AddSession(sess)
+}
+
+func testDeleteSession(t *testing.T) {
+	DeleteSession("125648752365421")
+}
+
+func testGetSession(t *testing.T) {
+	sess, _ := GetSession("4a460c09-c69c-40ef-6c65-c728acd4b959")
+	fmt.Println("Session的信息是：", sess)
 }

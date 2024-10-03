@@ -8,20 +8,20 @@ import (
 	"strconv"
 )
 
-// IndexHandler 去首页
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	//获取页码
-	pageNo := r.FormValue("pageNo")
-	if pageNo == "" {
-		pageNo = "1"
-	}
-	//调用bookdao中带分页的图书的函数
-	page, _ := dao.GetPageBooks(pageNo)
-	//解析模板
-	t := template.Must(template.ParseFiles("views/index.html"))
-	//执行
-	t.Execute(w, page)
-}
+//// IndexHandler 去首页
+//func IndexHandler(w http.ResponseWriter, r *http.Request) {
+//	//获取页码
+//	pageNo := r.FormValue("pageNo")
+//	if pageNo == "" {
+//		pageNo = "1"
+//	}
+//	//调用bookdao中带分页的图书的函数
+//	page, _ := dao.GetPageBooks(pageNo)
+//	//解析模板
+//	t := template.Must(template.ParseFiles("views/index.html"))
+//	//执行
+//	t.Execute(w, page)
+//}
 
 //// 获取所有图书
 //func GetBooks(w http.ResponseWriter, r *http.Request) {
@@ -166,6 +166,20 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 		//将价格范围设置到page中
 		page.MinPrice = minPrice
 		page.MaxPrice = maxPrice
+	}
+
+	//获取Cookie
+	cookie, _ := r.Cookie("user")
+	if cookie != nil {
+		//获取Cookie的Value
+		cookieValue := cookie.Value
+		//根据cookieValue查询对应的Session
+		session, _ := dao.GetSession(cookieValue)
+		if session.UserID > 0 {
+			//已经登录,设置page中的IsLogin字段和Username的字段值
+			page.IsLogin = true
+			page.Username = session.UserName
+		}
 	}
 
 	//解析模板文件

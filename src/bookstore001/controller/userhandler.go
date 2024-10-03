@@ -2,6 +2,8 @@ package controller
 
 import (
 	"bookstore001/dao"
+	"bookstore001/model"
+	"bookstore001/utils"
 	"html/template"
 	"net/http"
 )
@@ -16,13 +18,50 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	user, _ := dao.CheckUserNameAndPassword(username, password)
 	if user.Id > 0 {
 		//用户名和密码正确
+		//生成UUID作为Session的id
+		uuid := utils.CreateUUID()
+		//创建一个Session
+		session := &model.Session{
+			SessionID: uuid,
+			UserName:  user.Username,
+			UserID:    user.Id,
+		}
+		//将Session保存到数据库中
+		dao.AddSession(session)
+		//创建一个Cookie，与Session关联
+		cookie := http.Cookie{
+			Name:     "user",
+			Value:    uuid,
+			HttpOnly: true,
+		}
+		//将Cookie发送给浏览器
+		http.SetCookie(w, &cookie)
+
 		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-		t.Execute(w, "")
+		t.Execute(w, user)
 	} else {
 		//用户名或密码不正确
 		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
 		t.Execute(w, "用户名或密码不正确！")
 	}
+}
+
+// 处理用户注销的函数
+func Logout(w http.ResponseWriter, r *http.Request) {
+	//获取Cookie
+	cookie, _ := r.Cookie("user")
+	if cookie != nil {
+		//获取cookie的value值
+		cookieValue := cookie.Value
+		//删除数据库中对应的session
+		dao.DeleteSession(cookieValue)
+		//设置cookie失效
+		cookie.MaxAge = -1
+		//将修改后的cookie发送给浏览器
+		http.SetCookie(w, cookie)
+	}
+	//去首页
+	GetPageBooksByPrice(w, r)
 }
 
 // Regist 处理用户注册的函数
