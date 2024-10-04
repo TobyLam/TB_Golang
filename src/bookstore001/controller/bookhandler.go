@@ -168,18 +168,13 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 		page.MaxPrice = maxPrice
 	}
 
-	//获取Cookie
-	cookie, _ := r.Cookie("user")
-	if cookie != nil {
-		//获取Cookie的Value
-		cookieValue := cookie.Value
-		//根据cookieValue查询对应的Session
-		session, _ := dao.GetSession(cookieValue)
-		if session.UserID > 0 {
-			//已经登录,设置page中的IsLogin字段和Username的字段值
-			page.IsLogin = true
-			page.Username = session.UserName
-		}
+	//调用IsLogin函数判断是否已经登录
+	flag, userName := dao.IsLogin(r)
+
+	if flag {
+		//已经登录,设置page中的IsLogin字段和Username的字段值
+		page.IsLogin = true
+		page.Username = userName
 	}
 
 	//解析模板文件

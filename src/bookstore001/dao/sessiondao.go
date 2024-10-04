@@ -3,6 +3,7 @@ package dao
 import (
 	"bookstore001/model"
 	"bookstore001/utils"
+	"net/http"
 )
 
 // 添加Session
@@ -45,4 +46,22 @@ func GetSession(sessID string) (*model.Session, error) {
 	//扫描赋值
 	row.Scan(&sess.SessionID, &sess.UserName, &sess.UserID)
 	return sess, nil
+}
+
+// 判断用户是否已经登录
+func IsLogin(r *http.Request) (bool, string) {
+	//根据cookie的name获取cookie
+	cookie, _ := r.Cookie("user")
+	if cookie != nil {
+		//获取cookie的value
+		cookieValue := cookie.Value
+		//根据cookieValue去数据库查询对应的Session
+		session, _ := GetSession(cookieValue)
+		if session.UserID > 0 {
+			//已经登录
+			return true, session.UserName
+		}
+	}
+	//没有登录
+	return false, ""
 }
