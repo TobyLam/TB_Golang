@@ -7,7 +7,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	fmt.Println("测试bookdao中的方法")
+	//fmt.Println("测试bookdao中的方法")
 	m.Run()
 }
 
@@ -33,7 +33,7 @@ func testSave(t *testing.T) {
 }
 
 func TestBook(t *testing.T) {
-	fmt.Println("测试bookdao中的相关函数")
+	//fmt.Println("测试bookdao中的相关函数")
 	//t.Run("测试获取所有图书", testGetBooks)
 	//t.Run("测试添加图书", testAddBook)
 	//t.Run("测试删除图书", testDeleteBook)
@@ -112,10 +112,10 @@ func testGetPageBooksByPrice(t *testing.T) {
 }
 
 func TestSession(t *testing.T) {
-	fmt.Println("测试Session相关函数")
+	//fmt.Println("测试Session相关函数")
 	//t.Run("测试添加Session", testAddSession)
 	//t.Run("测试删除Session", testDeleteSession)
-	t.Run("测试获取Session", testGetSession)
+	//t.Run("测试获取Session", testGetSession)
 }
 
 func testAddSession(t *testing.T) {
@@ -134,4 +134,58 @@ func testDeleteSession(t *testing.T) {
 func testGetSession(t *testing.T) {
 	sess, _ := GetSession("4a460c09-c69c-40ef-6c65-c728acd4b959")
 	fmt.Println("Session的信息是：", sess)
+}
+
+func TestCart(t *testing.T) {
+	fmt.Println("测试购物车的相关函数")
+	//t.Run("测试添加购物车", testAddCart)
+	t.Run("测试根据图书的id获取对应的购物项", testGetCartItemByBookID)
+	t.Run("测试根据购物车的id获取所有的购物项", testGetItemsByCartID)
+}
+
+func testAddCart(t *testing.T) {
+	//设置要购买的第一本书
+	book := &model.Book{
+		ID:    1,
+		Price: 27.20,
+	}
+	book2 := &model.Book{
+		ID:    2,
+		Price: 23.00,
+	}
+	//创建购物项切片
+	var cartItems []*model.CartItem
+	//创建两个购物项
+	cartItem := &model.CartItem{
+
+		Book:   book,
+		Count:  10,
+		CartID: "6668888",
+	}
+	cartItems = append(cartItems, cartItem)
+	cartItem2 := &model.CartItem{
+		Book:   book2,
+		Count:  10,
+		CartID: "6668888",
+	}
+	cartItems = append(cartItems, cartItem2)
+	//创建购物车
+	cart := &model.Cart{
+		CartID:    "6668888",
+		CartItems: cartItems,
+		UserID:    17,
+	}
+	AddCart(cart)
+}
+
+func testGetCartItemByBookID(t *testing.T) {
+	cartItem, _ := GetCartItemByBookID("1")
+	fmt.Println("图书id=1的购物项的信息是：", cartItem)
+}
+
+func testGetItemsByCartID(t *testing.T) {
+	cartItems, _ := GetCartItemsByCartID("6668888")
+	for k, v := range cartItems {
+		fmt.Printf("第%v个购物项是：%v\n", k+1, v)
+	}
 }
