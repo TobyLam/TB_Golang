@@ -18,11 +18,11 @@ func AddCartItem(cartItem *model.CartItem) error {
 }
 
 // 根据图书id获取对应的购物项
-func GetCartItemByBookID(bookID string) (*model.CartItem, error) {
+func GetCartItemByBookIDAndCartID(bookID string, cartID string) (*model.CartItem, error) {
 	//sql语句
-	sqlStr := "select id,count,amount,cart_id from cart_items where book_id = ?"
+	sqlStr := "select id,count,amount,cart_id from cart_items where book_id = ? and cart_id = ?"
 	//执行
-	row := utils.Db.QueryRow(sqlStr, bookID)
+	row := utils.Db.QueryRow(sqlStr, bookID, cartID)
 	//创建cartItem
 	cartItem := &model.CartItem{}
 	err := row.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &cartItem.CartID)
@@ -35,7 +35,7 @@ func GetCartItemByBookID(bookID string) (*model.CartItem, error) {
 // 根据购物车id获取购物车所有购物项
 func GetCartItemsByCartID(cartID string) ([]*model.CartItem, error) {
 	//sql查询
-	sqlStr := "select id,count,amount,cart_id from cart_items where cart_id = ?"
+	sqlStr := "select id,count,amount,book_id,cart_id from cart_items where cart_id = ?"
 	//执行
 	rows, err := utils.Db.Query(sqlStr, cartID)
 	if err != nil {
@@ -43,12 +43,18 @@ func GetCartItemsByCartID(cartID string) ([]*model.CartItem, error) {
 	}
 	var cartItems []*model.CartItem
 	for rows.Next() {
+		//设置一个变量接收bookId
+		var bookID string
 		//创建cartItem
 		cartItem := &model.CartItem{}
-		err2 := rows.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &cartItem.CartID)
+		err2 := rows.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &bookID, &cartItem.CartID)
 		if err2 != nil {
 			return nil, err2
 		}
+		//根据bookID获取图书信息
+		book, _ := GetBookByID(bookID)
+		//将book设置到购物项中
+		cartItem.Book = book
 		cartItems = append(cartItems, cartItem)
 	}
 

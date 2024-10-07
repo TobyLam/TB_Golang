@@ -169,12 +169,12 @@ func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//调用IsLogin函数判断是否已经登录
-	flag, userName := dao.IsLogin(r)
+	flag, session := dao.IsLogin(r)
 
 	if flag {
 		//已经登录,设置page中的IsLogin字段和Username的字段值
 		page.IsLogin = true
-		page.Username = userName
+		page.Username = session.UserName
 	}
 
 	//解析模板文件

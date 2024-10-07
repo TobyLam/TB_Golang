@@ -6,7 +6,23 @@
     <title>书城首页</title>
     <link type="text/css" rel="stylesheet" href="/static/css/style.css">
     <script src="/static/script/jquery-1.7.2.js"></script>
+    <script>
+        $(function(){
+            //给添加购物车的按钮绑定单击事件
+            $(".addBook2Cart").on("click",function(){
+                //获取要添加的图书的id
+                var bookId = $(this).attr("id");
+                //设置请求的url
+                var url = "/addBook2Cart";
+                //设置请求参数
+                var param = {"bookId":bookId};
+                //发送Ajax请求
+                $.post(url,param,function(res){
 
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
