@@ -18,8 +18,12 @@
                 var param = {"bookId":bookId};
                 //发送Ajax请求
                 $.post(url,param,function(res){
-                    //将响应信息设置到span中
-                    $("#bookMsg").text(res)
+                    if(res == "请先登录！"){
+                        location = "/pages/user/login.html"
+                    }else{
+                        //将响应信息设置到span中
+                        $("#bookMsg").text(res)
+                    }
                 });
             });
         });
