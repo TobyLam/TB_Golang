@@ -23,13 +23,31 @@ func GetCartItemByBookIDAndCartID(bookID string, cartID string) (*model.CartItem
 	sqlStr := "select id,count,amount,cart_id from cart_items where book_id = ? and cart_id = ?"
 	//执行
 	row := utils.Db.QueryRow(sqlStr, bookID, cartID)
+
 	//创建cartItem
 	cartItem := &model.CartItem{}
 	err := row.Scan(&cartItem.CartItemID, &cartItem.Count, &cartItem.Amount, &cartItem.CartID)
 	if err != nil {
 		return nil, err
 	}
+	//根据图书id获取图书信息
+	book, _ := GetBookByID(bookID)
+	//将book设置到购物项中
+	cartItem.Book = book
+
 	return cartItem, nil
+}
+
+// 根据图书的id和购物车的id 更新购物项、购物车中图书的数量
+func UpdateBookCount(bookCount int64, bookID int, cartID string) error {
+	//sql语句
+	sql := "update cart_items set count = ? where book_id = ? and cart_id = ?"
+	//执行
+	_, err := utils.Db.Exec(sql, bookCount, bookID, cartID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // 根据购物车id获取购物车所有购物项

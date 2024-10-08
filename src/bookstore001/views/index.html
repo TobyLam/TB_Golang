@@ -18,7 +18,8 @@
                 var param = {"bookId":bookId};
                 //发送Ajax请求
                 $.post(url,param,function(res){
-
+                    //将响应信息设置到span中
+                    $("#bookMsg").text(res)
                 });
             });
         });

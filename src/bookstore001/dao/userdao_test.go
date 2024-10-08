@@ -141,7 +141,8 @@ func TestCart(t *testing.T) {
 	//t.Run("测试添加购物车", testAddCart)
 	//t.Run("测试根据图书的id获取对应的购物项", testGetCartItemByBookID)
 	//t.Run("测试根据购物车的id获取所有的购物项", testGetItemsByCartID)
-	t.Run("测试根据用户id获取对应的购物车", testGetCartByUserID)
+	//t.Run("测试根据用户id获取对应的购物车", testGetCartByUserID)
+	t.Run("测试根据图书id和购物车id更新购物车、购物项", testUpdateBookCount)
 }
 
 func testAddCart(t *testing.T) {
@@ -194,4 +195,8 @@ func testGetItemsByCartID(t *testing.T) {
 func testGetCartByUserID(t *testing.T) {
 	cart, _ := GetCartByUserID(17)
 	fmt.Println("id为17的用户的购物车信息是：", cart)
+}
+
+func testUpdateBookCount(t *testing.T) {
+	UpdateBookCount(10, 1, "f2ee85a3-bb35-4fe7-7d84-6cc55726eaef")
 }
