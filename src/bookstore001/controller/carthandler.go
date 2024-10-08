@@ -5,6 +5,7 @@ import (
 	"bookstore001/model"
 	"bookstore001/utils"
 	_ "fmt"
+	"html/template"
 	"net/http"
 )
 
@@ -38,7 +39,7 @@ func AddBook2Cart(w http.ResponseWriter, r *http.Request) {
 						//将购物项中的图书的数量加1
 						v.Count = v.Count + 1
 						//更新数据库中该购物项的图书数量
-						dao.UpdateBookCount(v.Count, v.Book.ID, cart.CartID)
+						dao.UpdateBookCount(v)
 					}
 				}
 			} else {
@@ -90,5 +91,38 @@ func AddBook2Cart(w http.ResponseWriter, r *http.Request) {
 		//没有登录
 		w.Write([]byte("请先登录！"))
 	}
+}
 
+// 根据用户id获取购物车信息
+func GetCartInfo(w http.ResponseWriter, r *http.Request) {
+	_, session := dao.IsLogin(r)
+	//获取用户id
+	userID := session.UserID
+	//根据用户的id从数据库中获取对应的购物车
+	cart, _ := dao.GetCartByUserID(userID)
+	if cart != nil {
+		//将购物车设置到session中
+		session.Cart = cart
+		//解析模板文件
+		t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
+		//执行
+		t.Execute(w, session)
+	} else {
+		//该用户还没有购物车
+
+		//解析模板文件
+		t := template.Must(template.ParseFiles("views/pages/cart/cart.html"))
+		//执行
+		t.Execute(w, session)
+	}
+}
+
+// 清空购物车
+func DeleteCart(w http.ResponseWriter, r *http.Request) {
+	//获取要清空的购物车id
+	cartID := r.FormValue("cartId")
+	//调用方法清空购物车
+	dao.DeleteCartByCartID(cartID)
+	//调用获取购物车函数再次查询购物车信息
+	GetCartInfo(w, r)
 }
