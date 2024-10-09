@@ -43,6 +43,8 @@ func main() {
 	http.HandleFunc("/getCartInfo", controller.GetCartInfo)
 	//清空购物车
 	http.HandleFunc("/deleteCart", controller.DeleteCart)
+	//删除购物项
+	http.HandleFunc("/deleteCartItem", controller.DeleteCartItem)
 
 	http.ListenAndServe(":8080", nil)
 }
