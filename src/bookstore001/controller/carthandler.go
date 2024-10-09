@@ -159,3 +159,36 @@ func DeleteCartItem(w http.ResponseWriter, r *http.Request) {
 	//再调用一次获取购物车信息的函数再次查询
 	GetCartInfo(w, r)
 }
+
+// 更新购物项
+func UpdateCartItem(w http.ResponseWriter, r *http.Request) {
+	//获取要更新的购物项id
+	cartItemID := r.FormValue("cartItemId")
+	//购物项id类型转换
+	iCartItemID, _ := strconv.ParseInt(cartItemID, 10, 64)
+	//获取用户输入的图书数量
+	bookCount := r.FormValue("bookCount")
+	//图书数量类型转换
+	iBookCount, _ := strconv.ParseInt(bookCount, 10, 64)
+	//获取session
+	_, session := dao.IsLogin(r)
+	//获取用户的id
+	userID := session.UserID
+	//获取该用户的购物车
+	cart, _ := dao.GetCartByUserID(userID)
+	//获取购物车中的所有的购物项
+	cartItems := cart.CartItems
+	//遍历得到每个购物项
+	for _, v := range cartItems {
+		if v.CartItemID == iCartItemID {
+			//需要更新的购物项
+			v.Count = iBookCount
+			//更新数据库中该购物项
+			dao.UpdateBookCount(v)
+		}
+	}
+	//更新购物车中的图书的总数量、总金额
+	dao.UpdateCart(cart)
+	//再调用一次获取购物车信息的函数再次查询
+	GetCartInfo(w, r)
+}

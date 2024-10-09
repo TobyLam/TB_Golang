@@ -12,13 +12,13 @@
                 return confirm("亲！确定要清空购物车吗？三思啊！~~~~(>_<)~~~~");
             });
             //给删除购物项的超链接绑定单击事件
-            $(".deleteCartItem").click(function(){
+            $(".deleteCartItem").on('click',function(){
                 //获取图书的名称
                 var title = $(this).attr("id");
                 return confirm("确定要删除【"+title+"】这本图书吗？");
             });
             //给输入购物项数量的input绑定change事件
-            $(".updateCartItem").change(function(){
+            $(".updateCartItem").on('change',function(){
                 //获取购物项的id
                 var cartItemId = $(this).attr("id");
                 //获取用户输入的图书的数量
@@ -83,7 +83,7 @@
                 <tr>
                     <td>{{.Book.Title}}</td>
                     <td>
-                        <input id="" class="updateCartItem" type="number" min="1" value="{{.Count}}" style="text-align:center;width: 50px;"/>
+                        <input id="{{.CartItemID}}" class="updateCartItem" type="number" min="1" value="{{.Count}}" style="text-align:center;width: 50px;"/>
                     </td>
                     <td>{{.Book.Price}}</td>
                     <td>{{.Amount}}</td>
