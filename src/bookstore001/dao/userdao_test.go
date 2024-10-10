@@ -4,6 +4,7 @@ import (
 	"bookstore001/model"
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestMain(m *testing.M) {
@@ -137,14 +138,14 @@ func testGetSession(t *testing.T) {
 }
 
 func TestCart(t *testing.T) {
-	fmt.Println("测试购物车的相关函数")
+	//fmt.Println("测试购物车的相关函数")
 	//t.Run("测试添加购物车", testAddCart)
 	//t.Run("测试根据图书的id获取对应的购物项", testGetCartItemByBookID)
 	//t.Run("测试根据购物车的id获取所有的购物项", testGetItemsByCartID)
 	//t.Run("测试根据用户id获取对应的购物车", testGetCartByUserID)
 	//t.Run("测试根据图书id和购物车id更新购物车、购物项", testUpdateBookCount)
 	//t.Run("根据购物车的id删除购物车", testDeleteCartByCartID)
-	t.Run("测试根据购物项id删除购物项", testDeleteCartItemByID)
+	//t.Run("测试根据购物项id删除购物项", testDeleteCartItemByID)
 }
 
 func testAddCart(t *testing.T) {
@@ -209,4 +210,49 @@ func testDeleteCartByCartID(t *testing.T) {
 
 func testDeleteCartItemByID(t *testing.T) {
 	DeleteCartItemByID("1")
+}
+
+func TestOrder(t *testing.T) {
+	fmt.Println("测试订单相关函数")
+	t.Run("测试添加订单和订单项", testAddOrder)
+}
+
+func testAddOrder(t *testing.T) {
+	//生成订单号
+	orderID := "18826418290"
+	//下单时间
+	timeStr := time.Now().Format("2006-01-02 15:04:05")
+	//创建订单
+	order := &model.Order{
+		OrderID:     orderID,
+		CreateTime:  timeStr,
+		TotalCount:  2,
+		TotalAmount: 400,
+		State:       0,
+		UserID:      18,
+	}
+	//创建订单项
+	orderItem := &model.OrderItem{
+		Count:   1,
+		Amount:  300,
+		Title:   "封神演义",
+		Author:  "许仲琳",
+		Price:   300,
+		ImgPath: "/static/img/default.jpg",
+		OrderID: orderID,
+	}
+	orderItem2 := &model.OrderItem{
+		Count:   1,
+		Amount:  100,
+		Title:   "红楼梦",
+		Author:  "曹雪芹/高鹗",
+		Price:   100,
+		ImgPath: "/static/img/default.jpg",
+		OrderID: orderID,
+	}
+	//保存订单
+	AddOrder(order)
+	//保存订单项
+	AddOrderItem(orderItem)
+	AddOrderItem(orderItem2)
 }
