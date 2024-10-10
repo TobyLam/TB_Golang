@@ -217,7 +217,8 @@ func TestOrder(t *testing.T) {
 	//t.Run("测试添加订单和订单项", testAddOrder)
 	//t.Run("测试获取所有订单", testGetOrders)
 	//t.Run("测试获取所有的订单项", testGetOrderItems)
-	t.Run("测试根据用户id获取订单", testGetMYOrders)
+	//t.Run("测试根据用户id获取订单", testGetMyOrders)
+	t.Run("测试更新订单状态", testUpdateOrderState)
 }
 
 func testAddOrder(t *testing.T) {
@@ -274,9 +275,13 @@ func testGetOrderItems(t *testing.T) {
 	}
 }
 
-func testGetMYOrders(t *testing.T) {
+func testGetMyOrders(t *testing.T) {
 	orders, _ := GetMyOrders(18)
 	for _, v := range orders {
 		fmt.Println("订单信息是:", v)
 	}
+}
+
+func testUpdateOrderState(t *testing.T) {
+	UpdateOrderState("69fd225c-dda8-44ff-443b-10c9063ee69c", 1)
 }

@@ -103,3 +103,23 @@ func GetMyOrders(w http.ResponseWriter, r *http.Request) {
 	//执行
 	t.Execute(w, session)
 }
+
+// 发货
+func SendOrder(w http.ResponseWriter, r *http.Request) {
+	//获取订单id
+	orderID := r.FormValue("orderId")
+	//调用dao中更新订单状态的函数
+	dao.UpdateOrderState(orderID, 1)
+	//调用GetOrders函数再次查询一次所有的订单
+	GetOrders(w, r)
+}
+
+// 收货
+func TakeOrder(w http.ResponseWriter, r *http.Request) {
+	//获取订单id
+	orderID := r.FormValue("orderId")
+	//调用dao中更新订单状态的函数
+	dao.UpdateOrderState(orderID, 2)
+	//调用GetMyOrders函数再次查询一次当前用户所有的订单
+	GetMyOrders(w, r)
+}

@@ -57,3 +57,15 @@ func GetMyOrders(userID int) ([]*model.Order, error) {
 	}
 	return orders, nil
 }
+
+// 更新订单状态、即发货、收货
+func UpdateOrderState(orderID string, state int64) error {
+	//sql语句
+	sql := "update orders set state = ? where id = ?"
+	//执行
+	_, err := utils.Db.Exec(sql, state, orderID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

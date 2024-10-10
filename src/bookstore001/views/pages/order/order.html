@@ -42,8 +42,14 @@
                 <td>{{.TotalAmount}}</td>
                 <td><a href="/getOrderInfo?orderId={{.OrderID}}">查看详情</a></td>
                 <td class="state">
-                    {{if .State}}
+                    {{if .SendComplete}}
                         <a href="/takeOrder?orderId={{.OrderID}}">确认收货</a>
+                    {{end}}
+                    {{if .NoSend}}
+                        等待发货
+                    {{end}}
+                    {{if .Complete}}
+                        交易完成
                     {{end}}
                 </td>
             </tr>
