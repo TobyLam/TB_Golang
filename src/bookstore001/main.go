@@ -51,6 +51,8 @@ func main() {
 	http.HandleFunc("/checkout", controller.Checkout)
 	//获取所有订单
 	http.HandleFunc("/getOrders", controller.GetOrders)
+	//获取订单详情，即订单包含的所有订单项
+	http.HandleFunc("/getOrderInfo", controller.GetOrderInfo)
 
 	http.ListenAndServe(":8080", nil)
 }

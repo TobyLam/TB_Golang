@@ -215,7 +215,8 @@ func testDeleteCartItemByID(t *testing.T) {
 func TestOrder(t *testing.T) {
 	fmt.Println("测试订单相关函数")
 	//t.Run("测试添加订单和订单项", testAddOrder)
-	t.Run("测试获取所有订单", testGetOrders)
+	//t.Run("测试获取所有订单", testGetOrders)
+	t.Run("测试获取所有的订单项", testGetOrderItems)
 }
 
 func testAddOrder(t *testing.T) {
@@ -262,5 +263,12 @@ func testGetOrders(t *testing.T) {
 	orders, _ := GetOrders()
 	for _, v := range orders {
 		fmt.Println("订单信息是:", v)
+	}
+}
+
+func testGetOrderItems(t *testing.T) {
+	ordersItems, _ := GetOrderItemsByOrderID("69fd225c-dda8-44ff-443b-10c9063ee69c")
+	for _, v := range ordersItems {
+		fmt.Println("订单项信息是:", v)
 	}
 }

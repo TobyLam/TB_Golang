@@ -75,3 +75,15 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 	//执行
 	t.Execute(w, orders)
 }
+
+// 获取订单对应的订单项
+func GetOrderInfo(w http.ResponseWriter, r *http.Request) {
+	//获取订单号
+	orderID := r.FormValue("orderId")
+	//调用函数
+	orderItems, _ := dao.GetOrderItemsByOrderID(orderID)
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/order/order_info.html"))
+	//执行
+	t.Execute(w, orderItems)
+}
