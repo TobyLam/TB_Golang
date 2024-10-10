@@ -65,3 +65,13 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	//执行
 	t.Execute(w, session)
 }
+
+// 获取所有订单
+func GetOrders(w http.ResponseWriter, r *http.Request) {
+	//调用函数
+	orders, _ := dao.GetOrders()
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/order/order_manager.html"))
+	//执行
+	t.Execute(w, orders)
+}

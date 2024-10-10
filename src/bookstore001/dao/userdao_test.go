@@ -214,7 +214,8 @@ func testDeleteCartItemByID(t *testing.T) {
 
 func TestOrder(t *testing.T) {
 	fmt.Println("测试订单相关函数")
-	t.Run("测试添加订单和订单项", testAddOrder)
+	//t.Run("测试添加订单和订单项", testAddOrder)
+	t.Run("测试获取所有订单", testGetOrders)
 }
 
 func testAddOrder(t *testing.T) {
@@ -255,4 +256,11 @@ func testAddOrder(t *testing.T) {
 	//保存订单项
 	AddOrderItem(orderItem)
 	AddOrderItem(orderItem2)
+}
+
+func testGetOrders(t *testing.T) {
+	orders, _ := GetOrders()
+	for _, v := range orders {
+		fmt.Println("订单信息是:", v)
+	}
 }

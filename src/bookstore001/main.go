@@ -49,6 +49,8 @@ func main() {
 	http.HandleFunc("/updateCartItem", controller.UpdateCartItem)
 	//去结账
 	http.HandleFunc("/checkout", controller.Checkout)
+	//获取所有订单
+	http.HandleFunc("/getOrders", controller.GetOrders)
 
 	http.ListenAndServe(":8080", nil)
 }
