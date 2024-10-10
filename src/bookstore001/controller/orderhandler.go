@@ -59,7 +59,7 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	//清空购物车
 	dao.DeleteCartByCartID(cart.CartID)
 	//将订单号设置到session中
-	session.OrderID = orderID
+	session.Order = order
 	//解析模板
 	t := template.Must(template.ParseFiles("views/pages/cart/checkout.html"))
 	//执行
@@ -86,4 +86,20 @@ func GetOrderInfo(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("views/pages/order/order_info.html"))
 	//执行
 	t.Execute(w, orderItems)
+}
+
+// 获取我的订单
+func GetMyOrders(w http.ResponseWriter, r *http.Request) {
+	//获取session
+	_, session := dao.IsLogin(r)
+	//获取用户id
+	userID := session.UserID
+	//调用函数
+	orders, _ := dao.GetMyOrders(userID)
+	//赋值给session
+	session.Orders = orders
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/order/order.html"))
+	//执行
+	t.Execute(w, session)
 }

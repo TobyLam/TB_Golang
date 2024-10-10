@@ -35,3 +35,25 @@ func GetOrders() ([]*model.Order, error) {
 
 	return orders, nil
 }
+
+// 获取我的订单
+func GetMyOrders(userID int) ([]*model.Order, error) {
+	//sql语句
+	sql := "select id,create_time,total_count,total_amount,state,user_id from orders where user_id = ?"
+	//执行
+	rows, err := utils.Db.Query(sql, userID)
+	if err != nil {
+		return nil, err
+	}
+	//定义切片
+	var orders []*model.Order
+	for rows.Next() {
+		//创建Order
+		order := &model.Order{}
+		//扫描赋值
+		rows.Scan(&order.OrderID, &order.CreateTime, &order.TotalCount, &order.TotalAmount, &order.State, &order.UserID)
+		//加入到切片中
+		orders = append(orders, order)
+	}
+	return orders, nil
+}
